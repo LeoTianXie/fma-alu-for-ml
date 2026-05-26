@@ -1,84 +1,22 @@
-# vsim -c -do "force sign_in 0; force exp_in 01111111; force man_in 0100000000000000000000000; force guard_bit 0; force round_bit 0; force sticky_bit 0; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; force man_in 1000000000000000000000000; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; force man_in 0000000000000000000000000; force guard_bit 0; force round_bit 0; force sticky_bit 0; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; force exp_in 01111111; force man_in 0011111111111111111111111; force guard_bit 1; force round_bit 1; force sticky_bit 0; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; force exp_in 11111110; force man_in 1000000000000000000000000; force guard_bit 0; force round_bit 0; force sticky_bit 0; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; force exp_in 00000001; force man_in 0000000000000000000010000; run 0; examine -radix unsigned exp_out; examine -radix binary man_out; examine overflow; examine underflow; quit" work.normalizer 
-# Start time: 13:06:17 on May 26,2026
+# vsim -c -do "force sign_in 0; force man_in 10000000000000000000000; force fmt_out 00; force exp_in 10000000; run 0; examine -radix bin result; force exp_in 10000001; run 0; examine -radix bin result; force exp_in 10000010; run 0; examine -radix bin result; quit" work.output_pack 
+# Start time: 14:16:04 on May 26,2026
 # Loading sv_std.std
-# Loading work.normalizer
+# Loading work.output_pack
 # force sign_in 0
-#  force exp_in 01111111
-#  force man_in 0100000000000000000000000
-#  force guard_bit 0
-#  force round_bit 0
-#  force sticky_bit 0
+#  force man_in 10000000000000000000000
+#  force fmt_out 00
+#  force exp_in 10000000
 #  run 0
-#  examine -radix unsigned exp_out
-# 127
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 0
-#  examine underflow
-# 0
-#  force man_in 1000000000000000000000000
+#  examine -radix bin result
+# 00000000000000000000000000000101
+#  force exp_in 10000001
 #  run 0
-#  examine -radix unsigned exp_out
-# 128
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 0
-#  examine underflow
-# 0
-#  force man_in 0000000000000000000000000
-#  force guard_bit 0
-#  force round_bit 0
-#  force sticky_bit 0
+#  examine -radix bin result
+# 00000000000000000000000000000101
+#  force exp_in 10000010
 #  run 0
-#  examine -radix unsigned exp_out
-# 0
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 0
-#  examine underflow
-# 0
-#  force exp_in 01111111
-#  force man_in 0011111111111111111111111
-#  force guard_bit 1
-#  force round_bit 1
-#  force sticky_bit 0
-#  run 0
-#  examine -radix unsigned exp_out
-# 127
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 0
-#  examine underflow
-# 0
-#  force exp_in 11111110
-#  force man_in 1000000000000000000000000
-#  force guard_bit 0
-#  force round_bit 0
-#  force sticky_bit 0
-#  run 0
-#  examine -radix unsigned exp_out
-# 255
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 1
-#  examine underflow
-# 0
-#  force exp_in 00000001
-#  force man_in 0000000000000000000010000
-#  run 0
-#  examine -radix unsigned exp_out
-# 0
-#  examine -radix binary man_out
-# 00000000000000000000000
-#  examine overflow
-# 0
-#  examine underflow
-# 1
+#  examine -radix bin result
+# 00000000000000000000000000000101
 #  quit
-# End time: 13:06:18 on May 26,2026, Elapsed time: 0:00:01
+# End time: 14:16:05 on May 26,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
