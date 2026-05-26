@@ -10,15 +10,15 @@ cModel Technology
 Z0 dD:/Documents/School/ee271labs/lab1
 vexp_aligner
 Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z2 !s110 1779822698
+Z2 !s110 1779827084
 !i10b 1
-!s100 D4]kW@9iPf?o<HmMNcohM2
-INY0;INzTmaIZKYQe@M@VL3
+!s100 _<i<MXT61SGnzd80<ALmB2
+IWSeTa3bA9Fj;F3NcWbe^>1
 Z3 VDg1SIo80bB@j0V0VzS_@n1
 !s105 exp_aligner_sv_unit
 S1
 Z4 dD:/Documents/School/ee470
-w1779818270
+w1779822854
 8./rtl/exp_aligner.sv
 F./rtl/exp_aligner.sv
 L0 1
@@ -26,7 +26,7 @@ Z5 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z6 !s108 1779822698.000000
+Z6 !s108 1779827084.000000
 !s107 ./rtl/exp_aligner.sv|
 !s90 -reportprogress|300|./rtl/exp_aligner.sv|
 !i113 1
@@ -56,15 +56,15 @@ r1
 R7
 vfp32_accumulator
 R1
-Z8 !s110 1779822699
+R2
 !i10b 1
-!s100 C8EU6D3XkCWS6E>ImC]IC1
-I<5WBSodH5@[>hlg3?DLBS2
+!s100 Gm3i9g6R@3f[Tdf?h]hh70
+I89d9]W0[BbR;B0<;K2Zoh1
 R3
 !s105 fp32_accumulator_sv_unit
 S1
 R4
-w1779821942
+w1779822939
 8./rtl/fp32_accumulator.sv
 F./rtl/fp32_accumulator.sv
 L0 1
@@ -72,14 +72,14 @@ R5
 r1
 !s85 0
 31
-Z9 !s108 1779822699.000000
+R6
 !s107 ./rtl/fp32_accumulator.sv|
 !s90 -reportprogress|300|./rtl/fp32_accumulator.sv|
 !i113 1
 R7
 vfp32_accumulator_tb
 R1
-R8
+!s110 1779822699
 !i10b 1
 !s100 eYEknFFDaWXZbTM4`VbEd2
 IIG?`8:[GUjfZgR=UDoE^11
@@ -95,14 +95,14 @@ R5
 r1
 !s85 0
 31
-R9
+!s108 1779822699.000000
 !s107 ./tb/fp32_accumulator_tb.sv|
 !s90 -reportprogress|300|./tb/fp32_accumulator_tb.sv|
 !i113 1
 R7
 vfp4_multiplier
 R1
-R2
+Z8 !s110 1779827083
 !i10b 1
 !s100 Wf3]?miHk87i=6^5a[Ole1
 I27Gl59b6Tc@OSi1n;m[2I2
@@ -118,7 +118,7 @@ R5
 r1
 !s85 0
 31
-R6
+Z9 !s108 1779827083.000000
 !s107 ./rtl/fp4_multiplier.sv|
 !s90 -reportprogress|300|./rtl/fp4_multiplier.sv|
 !i113 1
@@ -148,7 +148,7 @@ r1
 R7
 vfp8_multiplier
 R1
-R2
+R8
 !i10b 1
 !s100 L^]B@h23mc5Jjj;i^JA_P1
 INd_3G1S_Tjh>nUAPk<iSA2
@@ -164,7 +164,7 @@ R5
 r1
 !s85 0
 31
-R6
+R9
 !s107 ./rtl/fp8_multiplier.sv|
 !s90 -reportprogress|300|./rtl/fp8_multiplier.sv|
 !i113 1
@@ -219,13 +219,13 @@ vinput_decode
 R1
 R2
 !i10b 1
-!s100 GfOWaP2IA4F]MdQdLELV90
-I[3h5ojS5>7LPoVzaC<68_2
+!s100 Xe^D[F8o89aC6[kAJfFPd2
+ICE5j=BAI_jZT`EXciFcU<0
 R3
 !s105 input_decode_sv_unit
 S1
 R4
-w1779814799
+w1779822980
 8./rtl/input_decode.sv
 F./rtl/input_decode.sv
 L0 1
@@ -233,7 +233,7 @@ R5
 r1
 !s85 0
 31
-R6
+R9
 !s107 ./rtl/input_decode.sv|
 !s90 -reportprogress|300|./rtl/input_decode.sv|
 !i113 1
@@ -263,7 +263,7 @@ r1
 R7
 vmantissa_adder
 R1
-R8
+R2
 !i10b 1
 !s100 2MzA:8X[0VLL5W9oC:V3Y3
 IH6G=OZbCQd55F@5DdR`@<3
@@ -328,5 +328,51 @@ r1
 R15
 R16
 R17
+!i113 1
+R7
+vnormalizer
+R1
+R2
+!i10b 1
+!s100 <999^gc2Rj7LaTE7@zeOa3
+I1e7a`gIoEN3VocTGWT4eK0
+R3
+!s105 normalizer_sv_unit
+S1
+R4
+w1779826908
+8./rtl/normalizer.sv
+F./rtl/normalizer.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 ./rtl/normalizer.sv|
+!s90 -reportprogress|300|./rtl/normalizer.sv|
+!i113 1
+R7
+vnormalizer_tb
+R1
+R2
+!i10b 1
+!s100 eSc]8Wlao3S`^3V2fkT3a1
+I;YD<:LTPWh0H[8nk<:bcb2
+R3
+!s105 normalizer_tb_sv_unit
+S1
+R4
+w1779826957
+8./tb/normalizer_tb.sv
+F./tb/normalizer_tb.sv
+L0 3
+R5
+r1
+!s85 0
+31
+R6
+!s107 ./tb/normalizer_tb.sv|
+!s90 -reportprogress|300|./tb/normalizer_tb.sv|
 !i113 1
 R7
