@@ -24,6 +24,8 @@ module fp32_accumulator (
 
     logic        signs_match;
     logic        product_ge_acc;
+    logic [27:0] product_mag_ext;
+    logic [27:0] acc_mag_ext;
     logic [24:0] larger_man;
     logic [24:0] smaller_man;
     logic        larger_sign;
@@ -39,6 +41,7 @@ module fp32_accumulator (
     logic        c2;
     logic [23:0] sum_24;
     logic        result_bit24;
+    logic        result_is_zero;
 
     assign acc_shift_amount = (common_exp > acc_exp) ? (common_exp - acc_exp) : 8'd0;
 
@@ -93,8 +96,10 @@ module fp32_accumulator (
         endcase
     end
 
-    assign signs_match    = (sign_p == acc_sign);
-    assign product_ge_acc = (man_aligned >= acc_man_aligned);
+    assign signs_match     = (sign_p == acc_sign);
+    assign product_mag_ext = {man_aligned, guard_bit, round_bit, sticky_bit};
+    assign acc_mag_ext     = {acc_man_aligned, acc_guard, acc_round, acc_sticky};
+    assign product_ge_acc  = (product_mag_ext >= acc_mag_ext);
     assign larger_man     = product_ge_acc ? man_aligned : acc_man_aligned;
     assign smaller_man    = product_ge_acc ? acc_man_aligned : man_aligned;
     assign larger_sign    = product_ge_acc ? sign_p : acc_sign;
@@ -142,6 +147,7 @@ module fp32_accumulator (
         guard_acc  = guard_bit | acc_guard;
         round_acc  = round_bit | acc_round;
         sticky_acc = sticky_bit | acc_sticky;
+        result_is_zero = 1'b0;
 
         if (signs_match) begin
             result_bit24 = man_aligned[24] ^ acc_man_aligned[24] ^ c2;
@@ -150,7 +156,8 @@ module fp32_accumulator (
         end else begin
             result_bit24 = larger_man[24] ^ ~smaller_man[24] ^ c2;
             man_acc      = {result_bit24, sum_24};
-            sign_acc     = (man_acc == 25'b0) ? 1'b0 : larger_sign;
+            result_is_zero = (man_acc == 25'b0) & ~guard_acc & ~round_acc & ~sticky_acc;
+            sign_acc       = result_is_zero ? 1'b0 : larger_sign;
         end
     end
 
