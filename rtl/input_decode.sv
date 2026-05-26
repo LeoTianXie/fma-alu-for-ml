@@ -12,6 +12,7 @@ module input_decode #(
     output logic                       is_nan
 );
 
+    // Decode the selected FP format into fields, implicit mantissa bit, and special flags.
     always_comb begin
         sign     = 1'b0;
         exp      = '0;

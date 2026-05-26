@@ -36,6 +36,7 @@ module exp_aligner #(
     assign shift_amount = acc_larger ? (acc_exp - product_fp32_exp) : 8'd0;
     assign common_exp   = acc_larger ? acc_exp : product_fp32_exp;
 
+    // Right-shift the product mantissa to the common exponent and preserve G/R/S bits.
     always_comb begin
         man_aligned = 25'b0;
         guard_bit   = 1'b0;

@@ -45,6 +45,7 @@ module fp32_accumulator (
 
     assign acc_shift_amount = (common_exp > acc_exp) ? (common_exp - acc_exp) : 8'd0;
 
+    // Right-shift the accumulator mantissa to the common exponent and preserve G/R/S bits.
     always_comb begin
         acc_man_aligned = 25'b0;
         acc_guard       = 1'b0;
@@ -104,6 +105,7 @@ module fp32_accumulator (
     assign smaller_man    = product_ge_acc ? acc_man_aligned : man_aligned;
     assign larger_sign    = product_ge_acc ? sign_p : acc_sign;
 
+    // Select add operands, using two's-complement subtraction when signs differ.
     always_comb begin
         if (signs_match) begin
             add_a   = man_aligned[23:0];
@@ -142,6 +144,7 @@ module fp32_accumulator (
 
     assign sum_24 = {sum_high, sum_mid, sum_low};
 
+    // Assemble the accumulator result, carry slot, sign, exponent, and combined G/R/S bits.
     always_comb begin
         exp_acc    = common_exp;
         guard_acc  = guard_bit | acc_guard;
