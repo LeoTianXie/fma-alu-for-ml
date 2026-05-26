@@ -1,0 +1,9 @@
+# vsim -c -do "quit" work.fp_multiplier -gMAN_BITS=2 -gEXP_BITS=5 
+# Start time: 10:38:04 on May 26,2026
+# Loading sv_std.std
+# Loading work.fp_multiplier
+# Loading work.fp8_multiplier
+# Loading work.fp4_multiplier
+# quit
+# End time: 10:38:04 on May 26,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
