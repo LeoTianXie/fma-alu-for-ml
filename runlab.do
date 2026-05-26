@@ -6,7 +6,8 @@ vlib work
 #     their own "vlog" line below.
 vlog "./rtl/fp4_multiplier.sv"
 vlog "./rtl/fp8_multiplier.sv"
-vlog "./tb/fp8_multiplier_tb.sv"
+vlog "./rtl/input_decode.sv"
+vlog "./tb/input_decode_tb.sv"
 
 # Call vsim to invoke simulator
 #     Make sure the last item on the line is the name of the
@@ -16,7 +17,7 @@ vsim -voptargs="+acc" -t 1ps -lib work fp8_multiplier_tb
 # Source the wave do file
 #     This should be the file that sets up the signal window for
 #     the module you are testing.
-do fp8_multiplier_tb_wave.do
+do input_decode_tb_wave.do
 
 # Set the window types
 view wave
