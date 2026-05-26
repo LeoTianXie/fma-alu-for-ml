@@ -10,7 +10,7 @@ cModel Technology
 Z0 dD:/Documents/School/ee271labs/lab1
 vfp4_multiplier
 Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z2 !s110 1779812774
+Z2 !s110 1779814134
 !i10b 1
 !s100 Wf3]?miHk87i=6^5a[Ole1
 I27Gl59b6Tc@OSi1n;m[2I2
@@ -26,14 +26,14 @@ Z5 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z6 !s108 1779812774.000000
+Z6 !s108 1779814134.000000
 !s107 ./rtl/fp4_multiplier.sv|
 !s90 -reportprogress|300|./rtl/fp4_multiplier.sv|
 !i113 1
 Z7 tCvgOpt 0
 vfp4_multiplier_tb
 R1
-R2
+!s110 1779812774
 !i10b 1
 !s100 SF3z?j0`O4fHmQjj?C[K:3
 IcjNf`faEHC;C_9b9nCoOM0
@@ -49,9 +49,55 @@ R5
 r1
 !s85 0
 31
-R6
+!s108 1779812774.000000
 !s107 ./tb/fp4_multiplier_tb.sv|
 !s90 -reportprogress|300|./tb/fp4_multiplier_tb.sv|
+!i113 1
+R7
+vfp8_multiplier
+R1
+R2
+!i10b 1
+!s100 L^]B@h23mc5Jjj;i^JA_P1
+INd_3G1S_Tjh>nUAPk<iSA2
+R3
+!s105 fp8_multiplier_sv_unit
+S1
+R4
+w1779813605
+8./rtl/fp8_multiplier.sv
+F./rtl/fp8_multiplier.sv
+L0 1
+R5
+r1
+!s85 0
+31
+R6
+!s107 ./rtl/fp8_multiplier.sv|
+!s90 -reportprogress|300|./rtl/fp8_multiplier.sv|
+!i113 1
+R7
+vfp8_multiplier_tb
+R1
+!s110 1779814135
+!i10b 1
+!s100 ??N`dNzYj1YjSZJ`OlbL70
+IIY2GI[[nUSNT_A0K:j<Q60
+R3
+!s105 fp8_multiplier_tb_sv_unit
+S1
+R4
+w1779813970
+8./tb/fp8_multiplier_tb.sv
+F./tb/fp8_multiplier_tb.sv
+L0 3
+R5
+r1
+!s85 0
+31
+R6
+!s107 ./tb/fp8_multiplier_tb.sv|
+!s90 -reportprogress|300|./tb/fp8_multiplier_tb.sv|
 !i113 1
 R7
 vmux2_1
