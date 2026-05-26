@@ -1,9 +1,46 @@
-# vsim -c -do "quit" work.fp_multiplier -gMAN_BITS=2 -gEXP_BITS=5 
-# Start time: 10:38:04 on May 26,2026
+# vsim -c -do "force exp_p 00111; force man_p 01000000; force acc_exp 01111111; run 0; examine -radix binary man_aligned; examine -radix unsigned common_exp; examine guard_bit; examine round_bit; examine sticky_bit; force acc_exp 10010111; run 0; examine -radix binary man_aligned; examine -radix unsigned common_exp; examine guard_bit; examine round_bit; examine sticky_bit; force man_p 01111111; force acc_exp 10011010; run 0; examine -radix binary man_aligned; examine -radix unsigned common_exp; examine guard_bit; examine round_bit; examine sticky_bit; quit" work.exp_aligner 
+# Start time: 10:58:29 on May 26,2026
 # Loading sv_std.std
-# Loading work.fp_multiplier
-# Loading work.fp8_multiplier
-# Loading work.fp4_multiplier
-# quit
-# End time: 10:38:04 on May 26,2026, Elapsed time: 0:00:00
+# Loading work.exp_aligner
+# force exp_p 00111
+#  force man_p 01000000
+#  force acc_exp 01111111
+#  run 0
+#  examine -radix binary man_aligned
+# 0100000000000000000000000
+#  examine -radix unsigned common_exp
+# 127
+#  examine guard_bit
+# 0
+#  examine round_bit
+# 0
+#  examine sticky_bit
+# 0
+#  force acc_exp 10010111
+#  run 0
+#  examine -radix binary man_aligned
+# 0000000000000000000000000
+#  examine -radix unsigned common_exp
+# 151
+#  examine guard_bit
+# 1
+#  examine round_bit
+# 0
+#  examine sticky_bit
+# 0
+#  force man_p 01111111
+#  force acc_exp 10011010
+#  run 0
+#  examine -radix binary man_aligned
+# 0000000000000000000000000
+#  examine -radix unsigned common_exp
+# 154
+#  examine guard_bit
+# 0
+#  examine round_bit
+# 0
+#  examine sticky_bit
+# 1
+#  quit
+# End time: 10:58:29 on May 26,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
