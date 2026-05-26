@@ -1,22 +1,16 @@
-# vsim -c -do "force sign_in 0; force man_in 10000000000000000000000; force fmt_out 00; force exp_in 10000000; run 0; examine -radix bin result; force exp_in 10000001; run 0; examine -radix bin result; force exp_in 10000010; run 0; examine -radix bin result; quit" work.output_pack 
-# Start time: 14:16:04 on May 26,2026
+# vsim -c -do "quit" work.fma_vector_unit -gMAN_BITS=3 -gVECTOR_LEN=4 -gEXP_BITS=4 
+# Start time: 15:06:52 on May 26,2026
 # Loading sv_std.std
+# Loading work.fma_vector_unit
+# Loading work.fp32_accumulator
+# Loading work.mantissa_adder
+# Loading work.normalizer
 # Loading work.output_pack
-# force sign_in 0
-#  force man_in 10000000000000000000000
-#  force fmt_out 00
-#  force exp_in 10000000
-#  run 0
-#  examine -radix bin result
-# 00000000000000000000000000000101
-#  force exp_in 10000001
-#  run 0
-#  examine -radix bin result
-# 00000000000000000000000000000101
-#  force exp_in 10000010
-#  run 0
-#  examine -radix bin result
-# 00000000000000000000000000000101
-#  quit
-# End time: 14:16:05 on May 26,2026, Elapsed time: 0:00:01
+# Loading work.input_decode
+# Loading work.fp_multiplier
+# Loading work.fp8_multiplier
+# Loading work.fp4_multiplier
+# Loading work.exp_aligner
+# quit
+# End time: 15:06:53 on May 26,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
