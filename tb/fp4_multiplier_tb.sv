@@ -123,8 +123,6 @@ module fp4_multiplier_tb;
         else
             $display("*** FAILURES DETECTED ***");
         $display("---------------------------------------------------");
-
-        $finish;
     end
 
 endmodule
