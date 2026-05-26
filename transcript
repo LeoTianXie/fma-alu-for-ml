@@ -1,56 +1,15 @@
-# vsim -c -do "force sign_p 0; force man_aligned 0000000000000000000010000; force common_exp 01111111; force guard_bit 0; force round_bit 0; force sticky_bit 0; force acc_sign 1; force acc_exp 01111111; force acc_man 0000000000000000000010000; run 0; examine -radix binary man_acc; examine sign_acc; examine guard_acc; examine round_acc; examine sticky_acc; force guard_bit 1; run 0; examine -radix binary man_acc; examine sign_acc; examine guard_acc; examine round_acc; examine sticky_acc; force sign_p 1; force guard_bit 0; force acc_sign 0; force acc_exp 01111110; force acc_man 0000000000000000001000000; run 0; examine -radix binary man_acc; examine sign_acc; examine guard_acc; examine round_acc; examine sticky_acc; quit" work.fp32_accumulator 
-# Start time: 11:59:26 on May 26,2026
+# vsim -c -do "run -all; quit" work.fp32_accumulator_tb 
+# Start time: 12:06:12 on May 26,2026
 # Loading sv_std.std
+# Loading work.fp32_accumulator_tb
 # Loading work.fp32_accumulator
 # Loading work.mantissa_adder
-# force sign_p 0
-#  force man_aligned 0000000000000000000010000
-#  force common_exp 01111111
-#  force guard_bit 0
-#  force round_bit 0
-#  force sticky_bit 0
-#  force acc_sign 1
-#  force acc_exp 01111111
-#  force acc_man 0000000000000000000010000
-#  run 0
-#  examine -radix binary man_acc
-# 0000000000000000000000000
-#  examine sign_acc
-# 0
-#  examine guard_acc
-# 0
-#  examine round_acc
-# 0
-#  examine sticky_acc
-# 0
-#  force guard_bit 1
-#  run 0
-#  examine -radix binary man_acc
-# 0000000000000000000000000
-#  examine sign_acc
-# 0
-#  examine guard_acc
-# 1
-#  examine round_acc
-# 0
-#  examine sticky_acc
-# 0
-#  force sign_p 1
-#  force guard_bit 0
-#  force acc_sign 0
-#  force acc_exp 01111110
-#  force acc_man 0000000000000000001000000
-#  run 0
-#  examine -radix binary man_acc
-# 0000000000000000000010000
-#  examine sign_acc
-# 0
-#  examine guard_acc
-# 0
-#  examine round_acc
-# 0
-#  examine sticky_acc
-# 0
+# run -all
+# 
+# ---------------------------------------------------
+# RESULTS: 529 passed, 0 failed (total 529 checks)
+# ALL TESTS PASSED
+# ---------------------------------------------------
 #  quit
-# End time: 11:59:27 on May 26,2026, Elapsed time: 0:00:01
+# End time: 12:06:12 on May 26,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
