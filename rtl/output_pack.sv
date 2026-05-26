@@ -36,6 +36,7 @@ module output_pack (
     assign e4m3_man       = man_in[22:20];
     assign e5m2_man       = man_in[22:21];
 
+    // Pack normalized FP32 fields into the selected output format with narrow-format saturation.
     always_comb begin
         result = 32'h0000_0000;
 

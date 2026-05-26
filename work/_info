@@ -10,7 +10,7 @@ cModel Technology
 Z0 dD:/Documents/School/ee271labs/lab1
 vexp_aligner
 Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z2 !s110 1779827084
+Z2 !s110 1779831156
 !i10b 1
 !s100 _<i<MXT61SGnzd80<ALmB2
 IWSeTa3bA9Fj;F3NcWbe^>1
@@ -26,7 +26,7 @@ Z5 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z6 !s108 1779827084.000000
+Z6 !s108 1779831156.000000
 !s107 ./rtl/exp_aligner.sv|
 !s90 -reportprogress|300|./rtl/exp_aligner.sv|
 !i113 1
@@ -102,7 +102,7 @@ r1
 R7
 vfp4_multiplier
 R1
-Z8 !s110 1779827083
+!s110 1779831155
 !i10b 1
 !s100 Wf3]?miHk87i=6^5a[Ole1
 I27Gl59b6Tc@OSi1n;m[2I2
@@ -118,7 +118,7 @@ R5
 r1
 !s85 0
 31
-Z9 !s108 1779827083.000000
+!s108 1779831155.000000
 !s107 ./rtl/fp4_multiplier.sv|
 !s90 -reportprogress|300|./rtl/fp4_multiplier.sv|
 !i113 1
@@ -148,7 +148,7 @@ r1
 R7
 vfp8_multiplier
 R1
-R8
+R2
 !i10b 1
 !s100 L^]B@h23mc5Jjj;i^JA_P1
 INd_3G1S_Tjh>nUAPk<iSA2
@@ -164,7 +164,7 @@ R5
 r1
 !s85 0
 31
-R9
+R6
 !s107 ./rtl/fp8_multiplier.sv|
 !s90 -reportprogress|300|./rtl/fp8_multiplier.sv|
 !i113 1
@@ -233,7 +233,7 @@ R5
 r1
 !s85 0
 31
-R9
+R6
 !s107 ./rtl/input_decode.sv|
 !s90 -reportprogress|300|./rtl/input_decode.sv|
 !i113 1
@@ -286,48 +286,48 @@ R6
 R7
 vmux2_1
 R1
-Z10 !s110 1736921406
+Z8 !s110 1736921406
 !i10b 1
 !s100 db@k@fnga:kY6M:UDM?iV1
 IJ>QNS`gdkcliNLo;gQk_83
 R3
-Z11 !s105 mux2_1_sv_unit
+Z9 !s105 mux2_1_sv_unit
 S1
 R0
-Z12 w1736920291
-Z13 8./mux2_1.sv
-Z14 F./mux2_1.sv
+Z10 w1736920291
+Z11 8./mux2_1.sv
+Z12 F./mux2_1.sv
 L0 1
 R5
 r1
 !s85 0
 31
-Z15 !s108 1736921406.000000
-Z16 !s107 ./mux2_1.sv|
-Z17 !s90 -reportprogress|300|./mux2_1.sv|
+Z13 !s108 1736921406.000000
+Z14 !s107 ./mux2_1.sv|
+Z15 !s90 -reportprogress|300|./mux2_1.sv|
 !i113 1
 R7
 vmux2_1_testbench
 R1
-R10
+R8
 !i10b 1
 !s100 AaPWH7@z6J3I9g7Ce@1ED1
 I;eMHfQ<@c56k5bMBE8Am71
 R3
-R11
+R9
 S1
 R0
+R10
+R11
 R12
-R13
-R14
 L0 8
 R5
 r1
 !s85 0
 31
+R13
+R14
 R15
-R16
-R17
 !i113 1
 R7
 vnormalizer
@@ -355,7 +355,7 @@ R6
 R7
 vnormalizer_tb
 R1
-R2
+!s110 1779827084
 !i10b 1
 !s100 eSc]8Wlao3S`^3V2fkT3a1
 I;YD<:LTPWh0H[8nk<:bcb2
@@ -371,31 +371,54 @@ R5
 r1
 !s85 0
 31
-R6
+!s108 1779827084.000000
 !s107 ./tb/normalizer_tb.sv|
 !s90 -reportprogress|300|./tb/normalizer_tb.sv|
 !i113 1
 R7
 voutput_pack
 R1
-!s110 1779830160
+R2
 !i10b 1
-!s100 d1EM4QViDn]NbMg^YQO]f2
-I[1REBMi;aOeFm@BIKMN9b3
+!s100 WTPibeB4`I4[?=6^UQmJN3
+Ic6S?=3C?lodZ1h<;IC1DN2
 R3
 !s105 output_pack_sv_unit
 S1
 R4
-w1779830011
-8rtl/output_pack.sv
-Frtl/output_pack.sv
+w1779830931
+8./rtl/output_pack.sv
+F./rtl/output_pack.sv
 L0 1
 R5
 r1
 !s85 0
 31
-!s108 1779830160.000000
-!s107 rtl/output_pack.sv|
-!s90 rtl/output_pack.sv|
+R6
+!s107 ./rtl/output_pack.sv|
+!s90 -reportprogress|300|./rtl/output_pack.sv|
+!i113 1
+R7
+voutput_pack_tb
+R1
+R2
+!i10b 1
+!s100 ;2WB0PCUUbZ?336BXVc=k1
+IWRL?mGJe`_aMSfm==Rl730
+R3
+!s105 output_pack_tb_sv_unit
+S1
+R4
+w1779830752
+8./tb/output_pack_tb.sv
+F./tb/output_pack_tb.sv
+L0 3
+R5
+r1
+!s85 0
+31
+R6
+!s107 ./tb/output_pack_tb.sv|
+!s90 -reportprogress|300|./tb/output_pack_tb.sv|
 !i113 1
 R7

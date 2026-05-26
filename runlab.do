@@ -11,17 +11,18 @@ vlog "./rtl/exp_aligner.sv"
 vlog "./rtl/mantissa_adder.sv"
 vlog "./rtl/fp32_accumulator.sv"
 vlog "./rtl/normalizer.sv"
-vlog "./tb/normalizer_tb.sv"
+vlog "./rtl/output_pack.sv"
+vlog "./tb/output_pack_tb.sv"
 
 # Call vsim to invoke simulator
 #     Make sure the last item on the line is the name of the
 #     testbench module you want to execute.
-vsim -voptargs="+acc" -t 1ps -lib work normalizer_tb
+vsim -voptargs="+acc" -t 1ps -lib work output_pack_tb
 
 # Source the wave do file
 #     This should be the file that sets up the signal window for
 #     the module you are testing.
-do normalizer_tb_wave.do
+do output_pack_tb_wave.do
 
 # Set the window types
 view wave
