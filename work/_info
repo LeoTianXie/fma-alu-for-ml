@@ -54,6 +54,29 @@ r1
 !s90 -reportprogress|300|./tb/exp_aligner_tb.sv|
 !i113 1
 R7
+vfp32_accumulator
+R1
+Z8 !s110 1779820308
+!i10b 1
+!s100 z9C2QjC@MB>l^LfXk0`522
+I>EB7HP59<5IkP`4>PZi[01
+R3
+!s105 fp32_accumulator_sv_unit
+S1
+R4
+w1779820304
+8rtl\fp32_accumulator.sv
+Frtl\fp32_accumulator.sv
+L0 1
+R5
+r1
+!s85 0
+31
+Z9 !s108 1779820308.000000
+Z10 !s107 rtl\fp32_accumulator.sv|rtl\mantissa_adder.sv|
+Z11 !s90 rtl\mantissa_adder.sv|rtl\fp32_accumulator.sv|
+!i113 1
+R7
 vfp4_multiplier
 R1
 R2
@@ -215,49 +238,72 @@ r1
 !s90 -reportprogress|300|./tb/input_decode_tb.sv|
 !i113 1
 R7
-vmux2_1
+vmantissa_adder
 R1
-Z8 !s110 1736921406
+R8
 !i10b 1
-!s100 db@k@fnga:kY6M:UDM?iV1
-IJ>QNS`gdkcliNLo;gQk_83
+!s100 2MzA:8X[0VLL5W9oC:V3Y3
+IIHm@_SYU@dc]BVXH@EaUE2
 R3
-Z9 !s105 mux2_1_sv_unit
+!s105 mantissa_adder_sv_unit
 S1
-R0
-Z10 w1736920291
-Z11 8./mux2_1.sv
-Z12 F./mux2_1.sv
+R4
+w1779819930
+8rtl\mantissa_adder.sv
+Frtl\mantissa_adder.sv
 L0 1
 R5
 r1
 !s85 0
 31
-Z13 !s108 1736921406.000000
-Z14 !s107 ./mux2_1.sv|
-Z15 !s90 -reportprogress|300|./mux2_1.sv|
+R9
+R10
+R11
+!i113 1
+R7
+vmux2_1
+R1
+Z12 !s110 1736921406
+!i10b 1
+!s100 db@k@fnga:kY6M:UDM?iV1
+IJ>QNS`gdkcliNLo;gQk_83
+R3
+Z13 !s105 mux2_1_sv_unit
+S1
+R0
+Z14 w1736920291
+Z15 8./mux2_1.sv
+Z16 F./mux2_1.sv
+L0 1
+R5
+r1
+!s85 0
+31
+Z17 !s108 1736921406.000000
+Z18 !s107 ./mux2_1.sv|
+Z19 !s90 -reportprogress|300|./mux2_1.sv|
 !i113 1
 R7
 vmux2_1_testbench
 R1
-R8
+R12
 !i10b 1
 !s100 AaPWH7@z6J3I9g7Ce@1ED1
 I;eMHfQ<@c56k5bMBE8Am71
 R3
-R9
+R13
 S1
 R0
-R10
-R11
-R12
+R14
+R15
+R16
 L0 8
 R5
 r1
 !s85 0
 31
-R13
-R14
-R15
+R17
+R18
+R19
 !i113 1
 R7

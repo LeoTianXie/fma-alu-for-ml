@@ -1,14 +1,54 @@
-# vsim -c -do "run -all; quit" work.exp_aligner_tb 
-# Start time: 11:09:02 on May 26,2026
+# vsim -c -do "force sign_p 0; force man_aligned 0000000011111111111111111; force common_exp 01111111; force guard_bit 0; force round_bit 0; force sticky_bit 0; force acc_sign 0; force acc_exp 01111111; force acc_man 0000000000000000000000001; run 0; examine -radix binary man_acc; examine sign_acc; examine -radix unsigned exp_acc; examine guard_acc; examine round_acc; examine sticky_acc; force sign_p 0; force man_aligned 0000000000000000000010000; force acc_sign 1; force acc_man 0000000000000000000000001; run 0; examine -radix binary man_acc; examine sign_acc; force common_exp 10000001; force acc_exp 01111111; force sign_p 0; force acc_sign 0; force man_aligned 0010000000000000000000000; force acc_man 0000000000000000000000111; run 0; examine -radix binary man_acc; examine guard_acc; examine round_acc; examine sticky_acc; quit" work.fp32_accumulator 
+# Start time: 11:31:55 on May 26,2026
 # Loading sv_std.std
-# Loading work.exp_aligner_tb
-# Loading work.exp_aligner
-# run -all
-# 
-# ---------------------------------------------------
-# RESULTS: 26275 passed, 0 failed (total 26275 checks)
-# ALL TESTS PASSED
-# ---------------------------------------------------
+# Loading work.fp32_accumulator
+# Loading work.mantissa_adder
+# force sign_p 0
+#  force man_aligned 0000000011111111111111111
+#  force common_exp 01111111
+#  force guard_bit 0
+#  force round_bit 0
+#  force sticky_bit 0
+#  force acc_sign 0
+#  force acc_exp 01111111
+#  force acc_man 0000000000000000000000001
+#  run 0
+#  examine -radix binary man_acc
+# 0000000100000000000000000
+#  examine sign_acc
+# 0
+#  examine -radix unsigned exp_acc
+# 127
+#  examine guard_acc
+# 0
+#  examine round_acc
+# 0
+#  examine sticky_acc
+# 0
+#  force sign_p 0
+#  force man_aligned 0000000000000000000010000
+#  force acc_sign 1
+#  force acc_man 0000000000000000000000001
+#  run 0
+#  examine -radix binary man_acc
+# 0000000000000000000001111
+#  examine sign_acc
+# 0
+#  force common_exp 10000001
+#  force acc_exp 01111111
+#  force sign_p 0
+#  force acc_sign 0
+#  force man_aligned 0010000000000000000000000
+#  force acc_man 0000000000000000000000111
+#  run 0
+#  examine -radix binary man_acc
+# 0010000000000000000000001
+#  examine guard_acc
+# 1
+#  examine round_acc
+# 1
+#  examine sticky_acc
+# 0
 #  quit
-# End time: 11:09:02 on May 26,2026, Elapsed time: 0:00:00
+# End time: 11:31:56 on May 26,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
