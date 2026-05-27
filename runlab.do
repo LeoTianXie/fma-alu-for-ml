@@ -12,17 +12,18 @@ vlog "./rtl/mantissa_adder.sv"
 vlog "./rtl/fp32_accumulator.sv"
 vlog "./rtl/normalizer.sv"
 vlog "./rtl/output_pack.sv"
-vlog "./tb/output_pack_tb.sv"
+vlog "./rtl/fma_vector_unit.sv"
+vlog "./tb/fma_vector_unit_tb.sv"
 
 # Call vsim to invoke simulator
 #     Make sure the last item on the line is the name of the
 #     testbench module you want to execute.
-vsim -voptargs="+acc" -t 1ps -lib work output_pack_tb
+vsim -voptargs="+acc" -t 1ps -lib work fma_vector_unit_tb
 
 # Source the wave do file
 #     This should be the file that sets up the signal window for
 #     the module you are testing.
-do output_pack_tb_wave.do
+do fma_vector_unit_tb_wave.do
 
 # Set the window types
 view wave

@@ -1,16 +1,53 @@
-# vsim -c -do "quit" work.fma_vector_unit -gMAN_BITS=3 -gVECTOR_LEN=4 -gEXP_BITS=4 
-# Start time: 15:06:52 on May 26,2026
+# vsim -c -do "force a 00000000; force b 00000000; run 0; examine -radix bin sign_p; examine -radix bin exp_p; examine -radix bin man_p; force a 00000000; force b 00111000; run 0; examine -radix bin sign_p; examine -radix bin exp_p; examine -radix bin man_p; force a 00111000; force b 01000000; run 0; examine -radix bin sign_p; examine -radix bin exp_p; examine -radix bin man_p; force a 10000000; force b 00111000; run 0; examine -radix bin sign_p; examine -radix bin exp_p; examine -radix bin man_p; force a 00000001; force b 00111000; run 0; examine -radix bin sign_p; examine -radix bin exp_p; examine -radix bin man_p; quit" work.fp8_multiplier 
+# Start time: 21:27:14 on May 26,2026
 # Loading sv_std.std
-# Loading work.fma_vector_unit
-# Loading work.fp32_accumulator
-# Loading work.mantissa_adder
-# Loading work.normalizer
-# Loading work.output_pack
-# Loading work.input_decode
-# Loading work.fp_multiplier
 # Loading work.fp8_multiplier
 # Loading work.fp4_multiplier
-# Loading work.exp_aligner
-# quit
-# End time: 15:06:53 on May 26,2026, Elapsed time: 0:00:01
+# force a 00000000
+#  force b 00000000
+#  run 0
+#  examine -radix bin sign_p
+# 0
+#  examine -radix bin exp_p
+# 11001
+#  examine -radix bin man_p
+# 00000000
+#  force a 00000000
+#  force b 00111000
+#  run 0
+#  examine -radix bin sign_p
+# 0
+#  examine -radix bin exp_p
+# 00000
+#  examine -radix bin man_p
+# 00000000
+#  force a 00111000
+#  force b 01000000
+#  run 0
+#  examine -radix bin sign_p
+# 0
+#  examine -radix bin exp_p
+# 01000
+#  examine -radix bin man_p
+# 01000000
+#  force a 10000000
+#  force b 00111000
+#  run 0
+#  examine -radix bin sign_p
+# 1
+#  examine -radix bin exp_p
+# 00000
+#  examine -radix bin man_p
+# 00000000
+#  force a 00000001
+#  force b 00111000
+#  run 0
+#  examine -radix bin sign_p
+# 0
+#  examine -radix bin exp_p
+# 00000
+#  examine -radix bin man_p
+# 00001000
+#  quit
+# End time: 21:27:15 on May 26,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
