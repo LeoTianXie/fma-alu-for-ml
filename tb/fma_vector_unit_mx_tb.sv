@@ -94,8 +94,9 @@ module fma_vector_unit_mx_tb;
         real         v;
         begin
             s = b[7]; e = b[6:3]; m = b[2:0];
-            if (e == 4'hF) begin
-                // all-1s exp is NaN in E4M3 (no Inf encoding)
+            if (e == 4'hF && m == 3'b111) begin
+                // Per OCP MX v1.0 Table 2: only S 1111 111 is NaN.
+                // 0_1111_110 = +/-448 is the max normal.
                 v = 0.0/0.0;
             end else if (e == 4'h0 && m == 3'b000) begin
                 v = 0.0;
@@ -221,6 +222,39 @@ module fma_vector_unit_mx_tb;
         end
     endfunction
 
+    // Half-ulp of the narrow output format at magnitude x. The DUT round-trips
+    // the FP32 result back to the input format, so even a perfect arithmetic
+    // pipeline can deviate by up to half a narrow-format ulp.
+    function automatic real narrow_half_ulp(input logic [1:0] fmt, input real x);
+        real ax;
+        int  e;
+        int  m_bits;
+        begin
+            ax = (x < 0) ? -x : x;
+            case (fmt)
+                FMT_FP4:  m_bits = 1;
+                FMT_E4M3: m_bits = 3;
+                FMT_E5M2: m_bits = 2;
+                default:  m_bits = 23;
+            endcase
+            if (ax == 0.0) return 0.0;
+            e = $floor($ln(ax)/$ln(2.0));
+            return 0.5 * (2.0**(e - m_bits));
+        end
+    endfunction
+
+    // Decode the DUT result. output_pack packs the result back into the
+    // same narrow format as the inputs (fmt_sel drives both), so we must
+    // decode with the matching format. Only fmt_sel=2'b11 is FP32 passthrough.
+    function automatic real decode_result(input logic [1:0] fmt, input logic [31:0] r);
+        case (fmt)
+            FMT_FP4:  return decode_fp4 (r[7:0]);
+            FMT_E4M3: return decode_e4m3(r[7:0]);
+            FMT_E5M2: return decode_e5m2(r[7:0]);
+            default:  return fp32_to_real(r);
+        endcase
+    endfunction
+
     task automatic check_result(
         input string name,
         input real   ref_val,
@@ -231,10 +265,14 @@ module fma_vector_unit_mx_tb;
         real tol;
         real ulp_err;
         begin
-            dut_val = fp32_to_real(result);
+            dut_val = decode_result(fmt_sel, result);
             diff    = dut_val - ref_val;
             if (diff < 0) diff = -diff;
+            // Tolerance is the larger of: N FP32 ulps (arithmetic quality)
+            // and 1 narrow-format ulp at ref_val (round-trip quantization).
             tol     = real'(ulp_tol) * fp32_ulp(ref_val);
+            if (2.0 * narrow_half_ulp(fmt_sel, ref_val) > tol)
+                tol = 2.0 * narrow_half_ulp(fmt_sel, ref_val);
             ulp_err = (fp32_ulp(ref_val) > 0) ? diff / fp32_ulp(ref_val) : 0.0;
 
             if (diff <= tol) begin
@@ -268,9 +306,9 @@ module fma_vector_unit_mx_tb;
             @(posedge clk); #1;
             rst = 1'b0;
 
-            // accumulator steps one lane per cycle; wait VECTOR_LEN+2 to be safe
-            repeat (VECTOR_LEN + 2) @(posedge clk);
-            #1;
+            // Wait until DUT signals completion rather than guessing cycle count.
+            wait (valid_out == 1'b1);
+            @(posedge clk); #1;
         end
     endtask
 
