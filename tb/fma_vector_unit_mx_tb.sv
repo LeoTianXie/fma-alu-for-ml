@@ -52,6 +52,7 @@ module fma_vector_unit_mx_tb;
     logic                       clk;
     logic                       rst;
     logic [1:0]                 fmt_sel;
+    logic [1:0]                 fmt_out;
     logic [VECTOR_LEN-1:0][7:0] operand_a;
     logic [VECTOR_LEN-1:0][7:0] operand_b;
     logic [31:0]                acc_seed;
@@ -71,6 +72,7 @@ module fma_vector_unit_mx_tb;
         .clk       (clk),
         .rst       (rst),
         .fmt_sel   (fmt_sel),
+        .fmt_out   (fmt_out),
         .operand_a (operand_a),
         .operand_b (operand_b),
         .acc_seed  (acc_seed),
@@ -265,14 +267,11 @@ module fma_vector_unit_mx_tb;
         real tol;
         real ulp_err;
         begin
-            dut_val = decode_result(fmt_sel, result);
+            dut_val = decode_result(fmt_out, result);
             diff    = dut_val - ref_val;
             if (diff < 0) diff = -diff;
-            // Tolerance is the larger of: N FP32 ulps (arithmetic quality)
-            // and 1 narrow-format ulp at ref_val (round-trip quantization).
+            // Output is FP32 passthrough, so tolerance is purely FP32-ulp-based.
             tol     = real'(ulp_tol) * fp32_ulp(ref_val);
-            if (2.0 * narrow_half_ulp(fmt_sel, ref_val) > tol)
-                tol = 2.0 * narrow_half_ulp(fmt_sel, ref_val);
             ulp_err = (fp32_ulp(ref_val) > 0) ? diff / fp32_ulp(ref_val) : 0.0;
 
             if (diff <= tol) begin
@@ -300,6 +299,7 @@ module fma_vector_unit_mx_tb;
             // pulse async reset
             rst       = 1'b1;
             fmt_sel   = fmt;
+            fmt_out   = FMT_FP32;   // read result as FP32 to measure accumulator quality, not output-format range clipping
             operand_a = a;
             operand_b = b;
             acc_seed  = seed;

@@ -6,6 +6,7 @@ module fma_vector_unit #(
     input  logic                       clk,
     input  logic                       rst,
     input  logic [1:0]                 fmt_sel,
+    input  logic [1:0]                 fmt_out,
     input  logic [VECTOR_LEN-1:0][7:0] operand_a,
     input  logic [VECTOR_LEN-1:0][7:0] operand_b,
     input  logic [31:0]                acc_seed,
@@ -208,7 +209,7 @@ module fma_vector_unit #(
         .sign_in (norm_sign),
         .exp_in  (norm_exp),
         .man_in  (norm_man),
-        .fmt_out (fmt_sel),
+        .fmt_out (fmt_out),
         .result  (result)
     );
 

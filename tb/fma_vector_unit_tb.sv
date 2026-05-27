@@ -40,6 +40,7 @@ module fma_vector_unit_tb;
     logic                       clk = 1'b0;
     logic                       rst;
     logic [1:0]                 fmt_sel;
+    logic [1:0]                 fmt_out;
     logic [VECTOR_LEN-1:0][7:0] operand_a;
     logic [VECTOR_LEN-1:0][7:0] operand_b;
     logic [31:0]                acc_seed;
@@ -52,7 +53,10 @@ module fma_vector_unit_tb;
         .VECTOR_LEN (VECTOR_LEN),
         .EXP_BITS   (EXP_BITS),
         .MAN_BITS   (MAN_BITS)
-    ) dut (.*);
+    ) dut (
+        .fmt_out   (fmt_out),
+        .*
+    );
 
     // -------------------------------------------------------------------------
     // Clock
