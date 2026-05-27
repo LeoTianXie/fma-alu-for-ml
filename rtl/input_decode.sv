@@ -26,11 +26,11 @@ module input_decode #(
                 sign          = raw_bits[3];
                 exp           = raw_bits[2:1];
                 mantissa      = '0;
-                mantissa[0]   = raw_bits[0];
+                mantissa[MAN_BITS-1] = raw_bits[0];
                 mantissa[MAN_BITS] = (raw_bits[2:1] != 2'b00);
                 is_zero       = (raw_bits[2:1] == 2'b00) & (raw_bits[0] == 1'b0);
-                is_inf        = (raw_bits[2:1] == 2'b11) & (raw_bits[0] == 1'b0);
-                is_nan        = (raw_bits[2:1] == 2'b11) & (raw_bits[0] != 1'b0);
+                is_inf        = 1'b0;
+                is_nan        = 1'b0;
             end
 
             2'b01: begin

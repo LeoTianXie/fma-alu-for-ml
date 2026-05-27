@@ -52,10 +52,10 @@ module input_decode_tb;
                 m1     = r_raw[0];
                 r_sign = r_raw[3];
                 r_exp  = {2'b00, e4};           // zero-extend to EXP_BITS
-                r_man  = {(e4 != 2'b00), 2'b00, m1};  // [3]=implicit, [2:1]=pad, [0]=man
+                r_man  = {(e4 != 2'b00), m1, 2'b00};  // [3]=implicit, [2]=man, [1:0]=pad
                 r_zero = (e4 == 2'b00) & (m1 == 1'b0);
-                r_inf  = (e4 == 2'b11) & (m1 == 1'b0);
-                r_nan  = (e4 == 2'b11) & (m1 != 1'b0);
+                r_inf  = 1'b0;
+                r_nan  = 1'b0;
             end
 
             // FP8 E4M3: 1 sign + 4 exp + 3 man.  No infinity encoding.
@@ -145,15 +145,14 @@ module input_decode_tb;
         // Normal: exp=10, man=1  →  1.1 × 2^(2-bias)
         raw_bits = 8'h05; #1; check("FP4 +normal exp=10 man=1");
 
-        // Max normal: exp=10, man=1 (exp=11 is inf/nan)
-        raw_bits = 8'h05; #1; check("FP4 max normal");
+        // Largest finite MX FP4 value: exp=11, man=1 -> 1.5 * 2^2 = 6.0
+        raw_bits = 8'h07; #1; check("FP4 max finite 6.0");
 
-        // ±inf: exp=11, man=0
-        raw_bits = 8'h06; #1; check("FP4 +inf (exp=11 man=0)");
-        raw_bits = 8'h0E; #1; check("FP4 -inf (sign=1)");
+        // MX FP4 has no inf/NaN encodings in this datapath.
+        raw_bits = 8'h06; #1; check("FP4 finite exp=11 man=0");
+        raw_bits = 8'h0E; #1; check("FP4 negative finite exp=11 man=0");
 
-        // NaN: exp=11, man=1
-        raw_bits = 8'h07; #1; check("FP4 +nan (exp=11 man=1)");
+        raw_bits = 8'h07; #1; check("FP4 finite exp=11 man=1");
 
         // ==== FP8 E4M3 named cases (fmt_sel=01) ==============================
         // Field layout: {sign, exp[3:0], man[2:0]}

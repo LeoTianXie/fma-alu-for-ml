@@ -440,9 +440,8 @@ module fma_vector_unit_mx_tb;
         check_result("E5M2: 16*(1.0*1.0)", ref_val, 4);
 
         // -----------------------------------------------------------------
-        // T8: FP4 (E2M1) - exposes documented FP4 bias mismatch in
-        //     fp_multiplier (uses FP8 bias=7 instead of FP4 bias=1).
-        //     Ref = 16. DUT is expected to deviate; this test quantifies it.
+        // T8: FP4 (E2M1) - shared pipeline with runtime FP4 bias correction.
+        //     Ref = 16.
         // -----------------------------------------------------------------
         for (i = 0; i < VECTOR_LEN; i++) begin
             a[i] = FP4_POS_1P0;
@@ -450,7 +449,7 @@ module fma_vector_unit_mx_tb;
         end
         run_dot(FMT_FP4, a, b, 32'h0000_0000);
         ref_val = mx_ref_dot(FMT_FP4, a, b, 32'h0000_0000);
-        check_result("FP4: 16*(1.0*1.0) [bias-mismatch]", ref_val, 4);
+        check_result("FP4: 16*(1.0*1.0)", ref_val, 4);
 
         // -----------------------------------------------------------------
         // T9: FP4 small-magnitude.  Ref = 16 * 6 * 6 = 576.
@@ -461,7 +460,7 @@ module fma_vector_unit_mx_tb;
         end
         run_dot(FMT_FP4, a, b, 32'h0000_0000);
         ref_val = mx_ref_dot(FMT_FP4, a, b, 32'h0000_0000);
-        check_result("FP4: 16*(6*6)=576 [bias-mismatch]", ref_val, 4);
+        check_result("FP4: 16*(6*6)=576", ref_val, 4);
 
         // -----------------------------------------------------------------
         // T10: Randomized E4M3 - 8 trials, mostly-zero sparsity ~50%.
