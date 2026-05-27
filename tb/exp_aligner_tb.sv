@@ -5,7 +5,7 @@ module exp_aligner_tb;
     // -------------------------------------------------------------------------
     // E4M3 DUT  (EXP_BITS=4, MAN_BITS=3, FP8 bias=7)
     // -------------------------------------------------------------------------
-    logic [4:0] exp4;
+    logic [5:0] exp4;
     logic [7:0] man4;
     logic [7:0] acc_exp4;
     logic [24:0] man_aligned4;
@@ -27,7 +27,7 @@ module exp_aligner_tb;
     // -------------------------------------------------------------------------
     // E5M2 DUT  (EXP_BITS=5, MAN_BITS=2, FP8 bias=15)
     // -------------------------------------------------------------------------
-    logic [5:0] exp5;
+    logic [6:0] exp5;
     logic [5:0] man5;
     logic [7:0] acc_exp5;
     logic [24:0] man_aligned5;
@@ -56,7 +56,7 @@ module exp_aligner_tb;
     // Reference models
     // -------------------------------------------------------------------------
     task automatic ref_e4m3(
-        input  logic [4:0]  r_exp_p,
+        input  logic [5:0]  r_exp_p,
         input  logic [7:0]  r_man_p,
         input  logic [7:0]  r_acc_exp,
         output logic [24:0] r_man_aligned,
@@ -66,17 +66,21 @@ module exp_aligner_tb;
         output logic        r_sticky
     );
         logic        ovf;
-        logic [5:0]  exp_norm;
+        logic [6:0]  exp_norm;
         logic [7:0]  man_norm;
         logic [24:0] man_fp32;
+        logic signed [7:0] exp_norm_s;
+        logic signed [9:0] product_exp_s;
         logic [7:0]  product_exp;
         logic [7:0]  shift_amount;
 
         ovf         = r_man_p[7];
         man_norm    = ovf ? (r_man_p >> 1) : r_man_p;
-        exp_norm    = ovf ? ({1'b0, r_exp_p} + 6'd1) : {1'b0, r_exp_p};
+        exp_norm    = ovf ? ({r_exp_p[5], r_exp_p} + 7'd1) : {r_exp_p[5], r_exp_p};
         man_fp32    = {1'b0, man_norm[6:0], 17'b0};
-        product_exp = exp_norm + 8'd120;
+        exp_norm_s  = $signed({exp_norm[6], exp_norm});
+        product_exp_s = exp_norm_s + 10'sd120;
+        product_exp = product_exp_s[7:0];
 
         if (r_acc_exp > product_exp) begin
             shift_amount = r_acc_exp - product_exp;
@@ -91,7 +95,7 @@ module exp_aligner_tb;
     endtask
 
     task automatic ref_e5m2(
-        input  logic [5:0]  r_exp_p,
+        input  logic [6:0]  r_exp_p,
         input  logic [5:0]  r_man_p,
         input  logic [7:0]  r_acc_exp,
         output logic [24:0] r_man_aligned,
@@ -101,17 +105,21 @@ module exp_aligner_tb;
         output logic        r_sticky
     );
         logic        ovf;
-        logic [6:0]  exp_norm;
+        logic [7:0]  exp_norm;
         logic [5:0]  man_norm;
         logic [24:0] man_fp32;
+        logic signed [8:0] exp_norm_s;
+        logic signed [9:0] product_exp_s;
         logic [7:0]  product_exp;
         logic [7:0]  shift_amount;
 
         ovf         = r_man_p[5];
         man_norm    = ovf ? (r_man_p >> 1) : r_man_p;
-        exp_norm    = ovf ? ({1'b0, r_exp_p} + 7'd1) : {1'b0, r_exp_p};
+        exp_norm    = ovf ? ({r_exp_p[6], r_exp_p} + 8'd1) : {r_exp_p[6], r_exp_p};
         man_fp32    = {1'b0, man_norm[4:0], 19'b0};
-        product_exp = exp_norm + 8'd112;
+        exp_norm_s  = $signed({exp_norm[7], exp_norm});
+        product_exp_s = exp_norm_s + 10'sd112;
+        product_exp = product_exp_s[7:0];
 
         if (r_acc_exp > product_exp) begin
             shift_amount = r_acc_exp - product_exp;

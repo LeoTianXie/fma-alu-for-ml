@@ -1,7 +1,7 @@
-# vsim -c -do "run -all; quit" work.fma_vector_unit_tb 
-# Start time: 06:16:13 on May 27,2026
+# vsim -c -do "run -all; quit" work.fma_vector_unit_mx_tb 
+# Start time: 06:35:48 on May 27,2026
 # Loading sv_std.std
-# Loading work.fma_vector_unit_tb
+# Loading work.fma_vector_unit_mx_tb
 # Loading work.fma_vector_unit
 # Loading work.fp32_accumulator
 # Loading work.mantissa_adder
@@ -9,40 +9,42 @@
 # Loading work.output_pack
 # Loading work.input_decode
 # Loading work.fp_multiplier
-# Loading work.fp8_mul# End time: 06:16:13 on May 27,2026, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
+# Loading work.fp8_multiplier
+# Loading work.fp4_multiplier
+# Loading work.exp_aligner
+# run -all
 # ====================================================
 #  OCP-MX-style reference TB for fma_vector_unit
 #  Oracle: SystemVerilog real (IEEE 754 double)
 #  Block scale X^A = X^B = 1.0 (E8M0 = 127)
 # ====================================================
-# [PASS] E4M3: 16*(1.0*1.0)             # Break in Module fma_vector_unit_tb at tb/fma_vector_unit_tb.sv line 324
-# Stopped at tb/fma_vector_unit_tb.sv line 324
-#  quit
-# End time: 06:16:13 on May 27,2026, Elapsed time: 0:00:00
-# Errors: 0, Warnings: 0
-00e-01 dut=5.000000e-01  ulp_err=0.00
+# [PASS] E4M3: 16*(1.0*1.0)                       ref=1.600000e+01 dut=1.600000e+01  ulp_err=0.00
+# [PASS] E4M3: alt +-1 (cancellation)             ref=0.000000e+00 dut=0.000000e+00  ulp_err=0.00
+# [PASS] E4M3: sparse 1*0.5 + 15 zeros            ref=5.000000e-01 dut=5.000000e-01  ulp_err=0.00
 # [PASS] E4M3: zero ops, seed=3.0                 ref=3.000000e+00 dut=3.000000e+00  ulp_err=0.00
 # [PASS] E4M3: bit-25 stress 16*(2*2)=64          ref=6.400000e+01 dut=6.400000e+01  ulp_err=0.00
 # [PASS] E4M3: 16*(448*448) (bit-25 hot)          ref=3.211264e+06 dut=3.211264e+06  ulp_err=0.00
 # [PASS] E5M2: 16*(1.0*1.0)                       ref=1.600000e+01 dut=1.600000e+01  ulp_err=0.00
 # [PASS] FP4: 16*(1.0*1.0)                        ref=1.600000e+01 dut=1.600000e+01  ulp_err=0.00
 # [PASS] FP4: 16*(6*6)=576                        ref=5.760000e+02 dut=5.760000e+02  ulp_err=0.00
-# [FAIL] E4M3 random trial 0                      ref=-3.503533e+03 dut=-2.751224e+07  diff=2.751e+07  tol=7.813e-03  ulp_err=112675776377.5
+# [PASS] E4M3: min subnormal * 1.0                ref=1.953125e-03 dut=1.953125e-03  ulp_err=0.00
+# [PASS] E4M3: mixed normal/subnormal             ref=1.562500e-02 dut=1.562500e-02  ulp_err=0.00
+# [PASS] E4M3: subnormal cancellation             ref=0.000000e+00 dut=0.000000e+00  ulp_err=0.00
+# [FAIL] E4M3 random trial 0                      ref=-3.503533e+03 dut=-3.503799e+03  diff=2.660e-01  tol=7.813e-03  ulp_err=1089.5
 # [FAIL] E4M3 random trial 1                      ref=-2.063906e+02 dut=-2.023906e+02  diff=4.000e+00  tol=4.883e-04  ulp_err=262144.0
-# [FAIL] E4M3 random trial 2                      ref=-4.617693e+04 dut=-1.734768e+07  diff=1.730e+07  tol=1.250e-01  ulp_err=4429185296.7
-# [FAIL] E4M3 random trial 3                      ref=-3.572334e+04 dut=-3.568933e+04  diff=3.401e+01  tol=1.250e-01  ulp_err=8707.0
-# [FAIL] E4M3 random trial 4                      ref=-2.165598e+04 dut=2.244081e+07  diff=2.246e+07  tol=6.250e-02  ulp_err=11500782580.5
-# [FAIL] E4M3 random trial 5                      ref=1.408454e+04 dut=8.781050e+04  diff=7.373e+04  tol=3.125e-02  ulp_err=75495382.9
-# [FAIL] E4M3 random trial 6                      ref=-1.982025e+03 dut=-1.966278e+07  diff=1.966e+07  tol=3.906e-03  ulp_err=161061257009.0
-# [FAIL] E4M3 random trial 7                      ref=2.289999e+04 dut=9.361780e+06  diff=9.339e+06  tol=6.250e-02  ulp_err=4781506567.2
+# [PASS] E4M3 random trial 2                      ref=-4.617693e+04 dut=-4.617697e+04  ulp_err=8.72
+# [FAIL] E4M3 random trial 3                      ref=-3.572334e+04 dut=-3.568934e+04  diff=3.400e+01  tol=1.250e-01  ulp_err=8704.0
+# [FAIL] E4M3 random trial 4                      ref=-2.165598e+04 dut=-2.165498e+04  diff=1.001e+00  tol=6.250e-02  ulp_err=512.5
+# [FAIL] E4M3 random trial 5                      ref=1.408454e+04 dut=1.408254e+04  diff=2.001e+00  tol=3.125e-02  ulp_err=2049.1
+# [FAIL] E4M3 random trial 6                      ref=-1.982025e+03 dut=-1.980275e+03  diff=1.750e+00  tol=3.906e-03  ulp_err=14336.0
+# [PASS] E4M3 random trial 7                      ref=2.289999e+04 dut=2.289999e+04  ulp_err=0.18
 # ====================================================
-#  MX-ref TB summary:  PASS=9  FAIL=8
+#  MX-ref TB summary:  PASS=14  FAIL=6
 # ====================================================
-# ** Note: $stop    : tb/fma_vector_unit_mx_tb.sv(492)
-#    Time: 3056 ns  Iteration: 0  Instance: /fma_vector_unit_mx_tb
-# Break in Module fma_vector_unit_mx_tb at tb/fma_vector_unit_mx_tb.sv line 492
-# Stopped at tb/fma_vector_unit_mx_tb.sv line 492
+# ** Note: $stop    : tb/fma_vector_unit_mx_tb.sv(532)
+#    Time: 3596 ns  Iteration: 0  Instance: /fma_vector_unit_mx_tb
+# Break in Module fma_vector_unit_mx_tb at tb/fma_vector_unit_mx_tb.sv line 532
+# Stopped at tb/fma_vector_unit_mx_tb.sv line 532
 #  quit
-# End time: 06:16:13 on May 27,2026, Elapsed time: 0:00:00
+# End time: 06:35:48 on May 27,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0

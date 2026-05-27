@@ -326,6 +326,9 @@ module fma_vector_unit_mx_tb;
     localparam logic [7:0] E4M3_POS_0P5  = 8'b0_0110_000;  // 0.5
     localparam logic [7:0] E4M3_POS_MAX  = 8'b0_1111_110;  // 448
     localparam logic [7:0] E4M3_ZERO     = 8'h00;
+    localparam logic [7:0] E4M3_POS_SUB_MIN = 8'b0_0000_001;  // 2^-9
+    localparam logic [7:0] E4M3_NEG_SUB_MIN = 8'b1_0000_001;  // -2^-9
+    localparam logic [7:0] E4M3_POS_SUB_MAX = 8'b0_0000_111;  // 7 * 2^-9
     // E2M1 (FP4) constants (low 4 bits)
     localparam logic [7:0] FP4_POS_1P0   = 8'b0000_0010;   // S=0 E=01 M=0 = 1.0
     localparam logic [7:0] FP4_NEG_1P0   = 8'b0000_1010;   // -1.0
@@ -463,7 +466,44 @@ module fma_vector_unit_mx_tb;
         check_result("FP4: 16*(6*6)=576", ref_val, 4);
 
         // -----------------------------------------------------------------
-        // T10: Randomized E4M3 - 8 trials, mostly-zero sparsity ~50%.
+        // T10: E4M3 subnormal input products.
+        // -----------------------------------------------------------------
+        for (i = 0; i < VECTOR_LEN; i++) begin
+            a[i] = E4M3_ZERO;
+            b[i] = E4M3_ZERO;
+        end
+        a[0] = E4M3_POS_SUB_MIN;
+        b[0] = E4M3_POS_1P0;
+        run_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        ref_val = mx_ref_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        check_result("E4M3: min subnormal * 1.0", ref_val, 4);
+
+        for (i = 0; i < VECTOR_LEN; i++) begin
+            a[i] = E4M3_ZERO;
+            b[i] = E4M3_ZERO;
+        end
+        a[0] = E4M3_POS_SUB_MAX;
+        b[0] = E4M3_POS_1P0;
+        a[1] = E4M3_POS_1P0;
+        b[1] = E4M3_POS_SUB_MIN;
+        run_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        ref_val = mx_ref_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        check_result("E4M3: mixed normal/subnormal", ref_val, 4);
+
+        for (i = 0; i < VECTOR_LEN; i++) begin
+            a[i] = E4M3_ZERO;
+            b[i] = E4M3_ZERO;
+        end
+        a[0] = E4M3_POS_SUB_MIN;
+        b[0] = E4M3_POS_1P0;
+        a[1] = E4M3_NEG_SUB_MIN;
+        b[1] = E4M3_POS_1P0;
+        run_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        ref_val = mx_ref_dot(FMT_E4M3, a, b, 32'h0000_0000);
+        check_result("E4M3: subnormal cancellation", ref_val, 4);
+
+        // -----------------------------------------------------------------
+        // T11: Randomized E4M3 - 8 trials, mostly-zero sparsity ~50%.
         // -----------------------------------------------------------------
         begin : rand_loop
             int trial;

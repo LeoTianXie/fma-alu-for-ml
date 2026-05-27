@@ -10,7 +10,7 @@ module fp_multiplier #(
     input  logic [MAN_BITS:0]       man_b,
     input  logic [1:0]              fmt_sel,
     output logic                    sign_p,
-    output logic [EXP_BITS:0]       exp_p,
+    output logic [EXP_BITS+1:0]     exp_p,
     output logic [2*MAN_BITS+1:0]   man_p
 );
 

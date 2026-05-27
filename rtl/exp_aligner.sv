@@ -2,7 +2,7 @@ module exp_aligner #(
     parameter int EXP_BITS = 4,
     parameter int MAN_BITS = 3
 ) (
-    input  logic [EXP_BITS:0]       exp_p,
+    input  logic [EXP_BITS+1:0]     exp_p,
     input  logic [2*MAN_BITS+1:0]   man_p,
     input  logic [7:0]              acc_exp,
     input  logic [1:0]              fmt_sel,
@@ -27,20 +27,24 @@ module exp_aligner #(
     end
 
     logic                  ovf;
-    logic [EXP_BITS+1:0]   exp_p_norm;
+    logic [EXP_BITS+2:0]   exp_p_norm;
     logic [2*MAN_BITS+1:0] man_p_norm;
     logic [24:0]           man_fp32;
+    logic signed [EXP_BITS+3:0] exp_p_norm_signed;
+    logic signed [9:0]     product_fp32_exp_signed;
     logic [7:0]            product_fp32_exp;
     logic                  acc_larger;
     logic [7:0]            shift_amount;
 
     assign ovf        = man_p[2*MAN_BITS+1];
     assign man_p_norm = ovf ? (man_p >> 1) : man_p;
-    assign exp_p_norm = ovf ? ({1'b0, exp_p} + 1'b1) : {1'b0, exp_p};
+    assign exp_p_norm = ovf ? ({exp_p[EXP_BITS+1], exp_p} + 1'b1) : {exp_p[EXP_BITS+1], exp_p};
 
     assign man_fp32 = {1'b0, man_p_norm[2*MAN_BITS:0], {LSHIFT{1'b0}}};
 
-    assign product_fp32_exp = 8'(exp_p_norm) + bias_diff;
+    assign exp_p_norm_signed = $signed({exp_p_norm[EXP_BITS+2], exp_p_norm});
+    assign product_fp32_exp_signed = exp_p_norm_signed + $signed({2'b00, bias_diff});
+    assign product_fp32_exp = product_fp32_exp_signed[7:0];
 
     assign acc_larger   = (acc_exp > product_fp32_exp);
     assign shift_amount = acc_larger ? (acc_exp - product_fp32_exp) : 8'd0;

@@ -7,7 +7,7 @@ module fp8_multiplier_tb;
     // -------------------------------------------------------------------------
     logic [7:0]  a4, b4;
     logic        sign4;
-    logic [4:0]  exp4;      // EXP_BITS+1 = 5 bits
+    logic [5:0]  exp4;      // EXP_BITS+2 = 6 bits
     logic [7:0]  man4;      // 2*MAN_BITS+2 = 8 bits
 
     fp8_multiplier #(.EXP_BITS(4), .MAN_BITS(3)) dut_e4m3 (
@@ -24,7 +24,7 @@ module fp8_multiplier_tb;
     // -------------------------------------------------------------------------
     logic [7:0]  a5, b5;
     logic        sign5;
-    logic [5:0]  exp5;      // EXP_BITS+1 = 6 bits
+    logic [6:0]  exp5;      // EXP_BITS+2 = 7 bits
     logic [5:0]  man5;      // 2*MAN_BITS+2 = 6 bits
 
     fp8_multiplier #(.EXP_BITS(5), .MAN_BITS(2)) dut_e5m2 (
@@ -48,34 +48,52 @@ module fp8_multiplier_tb;
     task automatic ref_e4m3(
         input  logic [7:0]  in_a, in_b,
         output logic        r_sign,
-        output logic [4:0]  r_exp,
+        output logic [5:0]  r_exp,
         output logic [7:0]  r_man
     );
-        logic [3:0] ea, eb, ma, mb;
+        logic [3:0] ea, eb, ea_eff, eb_eff, ma, mb;
+        logic       za, zb, sa, sb;
+        logic signed [6:0] exp_s;
         ea     = in_a[6:3];
         eb     = in_b[6:3];
         ma     = {|in_a[6:3], in_a[2:0]};   // implicit bit = 0 when exp=0
         mb     = {|in_b[6:3], in_b[2:0]};
+        za     = (ea == 4'h0) && (in_a[2:0] == 3'h0);
+        zb     = (eb == 4'h0) && (in_b[2:0] == 3'h0);
+        sa     = (ea == 4'h0) && (in_a[2:0] != 3'h0);
+        sb     = (eb == 4'h0) && (in_b[2:0] != 3'h0);
+        ea_eff = sa ? 4'd1 : ea;
+        eb_eff = sb ? 4'd1 : eb;
+        exp_s  = $signed({1'b0, ea_eff}) + $signed({1'b0, eb_eff}) - 7'sd7;
         r_sign = in_a[7] ^ in_b[7];
-        r_exp  = {1'b0, ea} + {1'b0, eb} - 5'd7;
-        r_man  = {4'b0, ma} * {4'b0, mb};
+        r_exp  = (za || zb) ? 6'b0 : exp_s[5:0];
+        r_man  = (za || zb) ? 8'b0 : ({4'b0, ma} * {4'b0, mb});
     endtask
 
     task automatic ref_e5m2(
         input  logic [7:0]  in_a, in_b,
         output logic        r_sign,
-        output logic [5:0]  r_exp,
+        output logic [6:0]  r_exp,
         output logic [5:0]  r_man
     );
-        logic [4:0] ea, eb;
+        logic [4:0] ea, eb, ea_eff, eb_eff;
         logic [2:0] ma, mb;
+        logic       za, zb, sa, sb;
+        logic signed [7:0] exp_s;
         ea     = in_a[6:2];
         eb     = in_b[6:2];
         ma     = {|in_a[6:2], in_a[1:0]};   // implicit bit = 0 when exp=0
         mb     = {|in_b[6:2], in_b[1:0]};
+        za     = (ea == 5'h00) && (in_a[1:0] == 2'h0);
+        zb     = (eb == 5'h00) && (in_b[1:0] == 2'h0);
+        sa     = (ea == 5'h00) && (in_a[1:0] != 2'h0);
+        sb     = (eb == 5'h00) && (in_b[1:0] != 2'h0);
+        ea_eff = sa ? 5'd1 : ea;
+        eb_eff = sb ? 5'd1 : eb;
+        exp_s  = $signed({1'b0, ea_eff}) + $signed({1'b0, eb_eff}) - 8'sd15;
         r_sign = in_a[7] ^ in_b[7];
-        r_exp  = {1'b0, ea} + {1'b0, eb} - 6'd15;
-        r_man  = {3'b0, ma} * {3'b0, mb};
+        r_exp  = (za || zb) ? 7'b0 : exp_s[6:0];
+        r_man  = (za || zb) ? 6'b0 : ({3'b0, ma} * {3'b0, mb});
     endtask
 
     // -------------------------------------------------------------------------
@@ -83,7 +101,7 @@ module fp8_multiplier_tb;
     // -------------------------------------------------------------------------
     task automatic check_e4m3(input string label);
         logic       r_sign;
-        logic [4:0] r_exp;
+        logic [5:0] r_exp;
         logic [7:0] r_man;
         ref_e4m3(a4, b4, r_sign, r_exp, r_man);
         if (sign4 !== r_sign || exp4 !== r_exp || man4 !== r_man) begin
@@ -97,7 +115,7 @@ module fp8_multiplier_tb;
 
     task automatic check_e5m2(input string label);
         logic       r_sign;
-        logic [5:0] r_exp;
+        logic [6:0] r_exp;
         logic [5:0] r_man;
         ref_e5m2(a5, b5, r_sign, r_exp, r_man);
         if (sign5 !== r_sign || exp5 !== r_exp || man5 !== r_man) begin

@@ -30,9 +30,10 @@ module fma_vector_unit #(
     logic [VECTOR_LEN-1:0]                  b_inf;
     logic [VECTOR_LEN-1:0]                  a_nan;
     logic [VECTOR_LEN-1:0]                  b_nan;
+    logic [VECTOR_LEN-1:0]                  lane_zero;
 
     logic [VECTOR_LEN-1:0]                  mul_sign;
-    logic [VECTOR_LEN-1:0][EXP_BITS:0]      mul_exp;
+    logic [VECTOR_LEN-1:0][EXP_BITS+1:0]    mul_exp;
     logic [VECTOR_LEN-1:0][2*MAN_BITS+1:0]  mul_man;
 
     logic [VECTOR_LEN-1:0][24:0]            lane_man_aligned;
@@ -100,6 +101,8 @@ module fma_vector_unit #(
                 .is_nan   (b_nan[i])
             );
 
+            assign lane_zero[i] = a_zero[i] | b_zero[i];
+
             fp_multiplier #(
                 .EXP_BITS (EXP_BITS),
                 .MAN_BITS (MAN_BITS)
@@ -149,6 +152,15 @@ module fma_vector_unit #(
             sel_guard       = lane_guard[lane_idx_reg];
             sel_round       = lane_round[lane_idx_reg];
             sel_sticky      = lane_sticky[lane_idx_reg];
+
+            if (lane_zero[lane_idx_reg]) begin
+                sel_sign        = 1'b0;
+                sel_man_aligned = 25'b0;
+                sel_common_exp  = acc_exp_reg;
+                sel_guard       = 1'b0;
+                sel_round       = 1'b0;
+                sel_sticky      = 1'b0;
+            end
         end
     end
 
