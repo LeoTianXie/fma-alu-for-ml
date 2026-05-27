@@ -33,8 +33,8 @@ module fp4_multiplier_tb;
         logic [1:0] ea, eb, ma, mb;
         ea     = in_a[2:1];
         eb     = in_b[2:1];
-        ma     = {1'b1, in_a[0]};   // implicit leading 1
-        mb     = {1'b1, in_b[0]};
+        ma     = {|in_a[2:1], in_a[0]};   // implicit bit = 0 when exp=0 (subnormal/zero)
+        mb     = {|in_b[2:1], in_b[0]};
         r_sign = in_a[3] ^ in_b[3];
         r_man  = {2'b0, ma} * {2'b0, mb};   // 4-bit context, no truncation
         r_exp  = {1'b0, ea} + {1'b0, eb} - 3'd1;  // bias = 1

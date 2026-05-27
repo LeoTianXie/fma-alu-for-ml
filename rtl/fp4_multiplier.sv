@@ -15,11 +15,11 @@ module fp4_multiplier (
 
     assign sign_a = a[3];
     assign exp_a  = a[2:1];
-    assign man_a  = {1'b1, a[0]};
+    assign man_a  = {|a[2:1], a[0]};
 
     assign sign_b = b[3];
     assign exp_b  = b[2:1];
-    assign man_b  = {1'b1, b[0]};
+    assign man_b  = {|b[2:1], b[0]};
 
     assign sign_p = sign_a ^ sign_b;
     assign man_p  = man_a * man_b;

@@ -52,8 +52,8 @@ module fp8_multiplier_tb;
         logic [3:0] ea, eb, ma, mb;
         ea     = in_a[6:3];
         eb     = in_b[6:3];
-        ma     = {1'b1, in_a[2:0]};
-        mb     = {1'b1, in_b[2:0]};
+        ma     = {|in_a[6:3], in_a[2:0]};   // implicit bit = 0 when exp=0
+        mb     = {|in_b[6:3], in_b[2:0]};
         r_sign = in_a[7] ^ in_b[7];
         r_exp  = {1'b0, ea} + {1'b0, eb} - 5'd7;
         r_man  = {4'b0, ma} * {4'b0, mb};
@@ -69,8 +69,8 @@ module fp8_multiplier_tb;
         logic [2:0] ma, mb;
         ea     = in_a[6:2];
         eb     = in_b[6:2];
-        ma     = {1'b1, in_a[1:0]};
-        mb     = {1'b1, in_b[1:0]};
+        ma     = {|in_a[6:2], in_a[1:0]};   // implicit bit = 0 when exp=0
+        mb     = {|in_b[6:2], in_b[1:0]};
         r_sign = in_a[7] ^ in_b[7];
         r_exp  = {1'b0, ea} + {1'b0, eb} - 6'd15;
         r_man  = {3'b0, ma} * {3'b0, mb};

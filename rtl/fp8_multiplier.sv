@@ -27,11 +27,11 @@ module fp8_multiplier #(
 
     assign sign_a = a[7];
     assign exp_a  = a[6:MAN_BITS];
-    assign man_a  = {1'b1, a[MAN_BITS-1:0]};
+    assign man_a  = {|exp_a, a[MAN_BITS-1:0]};
 
     assign sign_b = b[7];
     assign exp_b  = b[6:MAN_BITS];
-    assign man_b  = {1'b1, b[MAN_BITS-1:0]};
+    assign man_b  = {|exp_b, b[MAN_BITS-1:0]};
 
     assign sign_p = sign_a ^ sign_b;
     assign exp_p  = {1'b0, exp_a} + {1'b0, exp_b} - (EXP_BITS + 1)'(BIAS);
