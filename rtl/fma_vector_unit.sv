@@ -44,7 +44,9 @@ module fma_vector_unit #(
     logic                                   acc_sign_reg;
     logic [7:0]                             acc_exp_reg;
     logic [24:0]                            acc_man_reg;
-    logic                                   running_sticky_reg;
+    logic                                   acc_guard_reg;
+    logic                                   acc_round_reg;
+    logic                                   acc_sticky_reg;
     logic [LANE_IDX_BITS-1:0]               lane_idx_reg;
     logic                                   done_reg;
 
@@ -61,6 +63,7 @@ module fma_vector_unit #(
     logic                                   acc_guard_next;
     logic                                   acc_round_next;
     logic                                   acc_sticky_next;
+    logic                                   acc_carry_next;
 
     logic                                   norm_sign;
     logic [7:0]                             norm_exp;
@@ -159,30 +162,45 @@ module fma_vector_unit #(
         .acc_sign    (acc_sign_reg),
         .acc_exp     (acc_exp_reg),
         .acc_man     (acc_man_reg),
+        .acc_guard_in (acc_guard_reg),
+        .acc_round_in (acc_round_reg),
+        .acc_sticky_in(acc_sticky_reg),
         .sign_acc    (acc_sign_next),
         .exp_acc     (acc_exp_next),
         .man_acc     (acc_man_next),
         .guard_acc   (acc_guard_next),
         .round_acc   (acc_round_next),
-        .sticky_acc  (acc_sticky_next)
+        .sticky_acc  (acc_sticky_next),
+        .carry_acc   (acc_carry_next)
     );
 
-    // Sequential accumulator state: init from acc_seed on reset, then step through VECTOR_LEN lanes once, OR-folding G/R/S into running_sticky_reg and latching done_reg on the final lane.
+    // Sequential accumulator state: init from acc_seed, consume one lane per cycle, and renormalize any bit-25 carry immediately.
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             acc_sign_reg       <= acc_seed[31];
             acc_exp_reg        <= acc_seed[30:23];
             acc_man_reg        <= (acc_seed[30:23] == 8'h00) ?
                                   25'b0 : {1'b0, 1'b1, acc_seed[22:0]};
-            running_sticky_reg <= 1'b0;
+            acc_guard_reg      <= 1'b0;
+            acc_round_reg      <= 1'b0;
+            acc_sticky_reg     <= 1'b0;
             lane_idx_reg       <= '0;
             done_reg           <= 1'b0;
         end else if (!done_reg) begin
             acc_sign_reg       <= acc_sign_next;
-            acc_exp_reg        <= acc_exp_next;
-            acc_man_reg        <= acc_man_next;
-            running_sticky_reg <= running_sticky_reg |
-                                  acc_guard_next | acc_round_next | acc_sticky_next;
+            if (acc_carry_next) begin
+                acc_exp_reg    <= acc_exp_next + 8'd1;
+                acc_man_reg    <= {1'b1, acc_man_next[24:1]};
+                acc_guard_reg  <= acc_man_next[0];
+                acc_round_reg  <= acc_guard_next;
+                acc_sticky_reg <= acc_round_next | acc_sticky_next;
+            end else begin
+                acc_exp_reg    <= acc_exp_next;
+                acc_man_reg    <= acc_man_next;
+                acc_guard_reg  <= acc_guard_next;
+                acc_round_reg  <= acc_round_next;
+                acc_sticky_reg <= acc_sticky_next;
+            end
             lane_idx_reg       <= lane_idx_reg + 1'b1;
 
             if (lane_idx_reg == (VECTOR_LEN - 1)) begin
@@ -195,9 +213,9 @@ module fma_vector_unit #(
         .sign_in    (acc_sign_reg),
         .exp_in     (acc_exp_reg),
         .man_in     (acc_man_reg),
-        .guard_bit  (1'b0),
-        .round_bit  (1'b0),
-        .sticky_bit (running_sticky_reg),
+        .guard_bit  (acc_guard_reg),
+        .round_bit  (acc_round_reg),
+        .sticky_bit (acc_sticky_reg),
         .sign_out   (norm_sign),
         .exp_out    (norm_exp),
         .man_out    (norm_man),

@@ -8,15 +8,21 @@ module fp32_accumulator (
     input  logic        acc_sign,
     input  logic [7:0]  acc_exp,
     input  logic [24:0] acc_man,
+    input  logic        acc_guard_in,
+    input  logic        acc_round_in,
+    input  logic        acc_sticky_in,
     output logic        sign_acc,
     output logic [7:0]  exp_acc,
     output logic [24:0] man_acc,
     output logic        guard_acc,
     output logic        round_acc,
-    output logic        sticky_acc
+    output logic        sticky_acc,
+    output logic        carry_acc
 );
 
     logic [7:0]  acc_shift_amount;
+    logic [27:0] acc_ext;
+    logic [27:0] acc_ext_shifted;
     logic [24:0] acc_man_aligned;
     logic        acc_guard;
     logic        acc_round;
@@ -45,56 +51,49 @@ module fp32_accumulator (
 
     assign acc_shift_amount = (common_exp > acc_exp) ? (common_exp - acc_exp) : 8'd0;
 
-    // Right-shift the accumulator mantissa to the common exponent and preserve G/R/S bits.
+    assign acc_ext = {acc_man, acc_guard_in, acc_round_in, acc_sticky_in};
+
+    // Right-shift the accumulator's mantissa+G/R/S stream to the common exponent.
     always_comb begin
+        acc_ext_shifted = 28'b0;
         acc_man_aligned = 25'b0;
         acc_guard       = 1'b0;
         acc_round       = 1'b0;
         acc_sticky      = 1'b0;
 
-        unique case (1'b1)
-            (acc_shift_amount == 8'd0): begin
-                acc_man_aligned = acc_man;
-            end
-
-            (acc_shift_amount == 8'd1): begin
-                acc_man_aligned = acc_man >> 1;
-                acc_guard       = acc_man[0];
-            end
-
-            (acc_shift_amount == 8'd2): begin
-                acc_man_aligned = acc_man >> 2;
-                acc_guard       = acc_man[1];
-                acc_round       = acc_man[0];
-            end
-
-            ((acc_shift_amount >= 8'd3) && (acc_shift_amount <= 8'd24)): begin
-                acc_man_aligned = acc_man >> acc_shift_amount[4:0];
-                acc_guard       = acc_man[acc_shift_amount[4:0] - 5'd1];
-                acc_round       = acc_man[acc_shift_amount[4:0] - 5'd2];
-
-                for (int i = 0; i < 25; i++) begin
-                    if (i + 3 <= acc_shift_amount) begin
-                        acc_sticky = acc_sticky | acc_man[i];
-                    end
+        if (acc_shift_amount <= 8'd27) begin
+            for (int i = 0; i < 28; i++) begin
+                if ((i + acc_shift_amount) < 28) begin
+                    acc_ext_shifted[i] = acc_ext[i + acc_shift_amount];
                 end
             end
 
-            (acc_shift_amount == 8'd25): begin
-                acc_guard  = acc_man[24];
-                acc_round  = acc_man[23];
-                acc_sticky = |acc_man[22:0];
-            end
+            acc_man_aligned = acc_ext_shifted[27:3];
+            acc_guard       = acc_ext_shifted[2];
+            acc_round       = acc_ext_shifted[1];
+            acc_sticky      = acc_ext_shifted[0];
 
-            (acc_shift_amount == 8'd26): begin
-                acc_round  = acc_man[24];
-                acc_sticky = |acc_man[23:0];
+            for (int i = 0; i < 28; i++) begin
+                if ((acc_shift_amount != 8'd0) && (i < acc_shift_amount)) begin
+                    acc_sticky = acc_sticky | acc_ext[i];
+                end
             end
+        end else begin
+            acc_sticky = |acc_ext;
+        end
+    end
 
-            default: begin
-                acc_sticky = |acc_man;
-            end
-        endcase
+    always_comb begin
+        carry_acc = 1'b0;
+        if (signs_match) begin
+            unique case ({man_aligned[24], acc_man_aligned[24], c2})
+                3'b000,
+                3'b001,
+                3'b010,
+                3'b100: carry_acc = 1'b0;
+                default: carry_acc = 1'b1;
+            endcase
+        end
     end
 
     assign signs_match     = (sign_p == acc_sign);

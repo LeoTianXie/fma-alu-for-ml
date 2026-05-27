@@ -21,8 +21,8 @@
 //   deviation that exceeds ~1 FP32 ulp implicates the DUT, not the ref.
 //
 // What this exposes vs the original self-checking TB:
-//   - Bit-25 carry loss in fp32_accumulator (long same-sign accumulation)
-//   - FP4 bias mismatch in fp_multiplier (uses FP8 bias for FP4 inputs)
+//   - Long same-sign accumulation regressions in fp32_accumulator
+//   - FP4 edge cases in the format-correct multiplier/alignment path
 //   - Conservative sticky OR-back in normalizer (rounding bias)
 //   - Output_pack truncation when narrowing (not exercised here, fmt=11)
 //
@@ -402,10 +402,9 @@ module fma_vector_unit_mx_tb;
         check_result("E4M3: zero ops, seed=3.0", ref_val, 0);
 
         // -----------------------------------------------------------------
-        // T5: STRESS - bit-25 carry exposure.
+        // T5: STRESS - bit-25 carry regression.
         //     16 lanes of (2.0 * 2.0) = 4.0  -> sum = 64.0.
-        //     With FP32 accumulator this should be exact; if bit-25 carry
-        //     is silently dropped during alignment the result drifts.
+        //     With per-cycle carry renormalization this should be exact.
         // -----------------------------------------------------------------
         for (i = 0; i < VECTOR_LEN; i++) begin
             a[i] = E4M3_POS_2P0;
@@ -418,7 +417,7 @@ module fma_vector_unit_mx_tb;
         // -----------------------------------------------------------------
         // T6: STRESS - max normal accumulation.
         //     16 lanes of (448*448) = 200704 each -> 3,211,264.
-        //     Pushes the accumulator hard; sensitive to bit-25 carry.
+        //     Pushes the accumulator hard; sensitive to bit-25 carry regressions.
         // -----------------------------------------------------------------
         for (i = 0; i < VECTOR_LEN; i++) begin
             a[i] = E4M3_POS_MAX;

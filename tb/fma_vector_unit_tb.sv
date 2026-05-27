@@ -5,25 +5,12 @@
 //
 // Strategy notes
 // --------------
-// Two upstream limitations constrain what we can sanely verify end-to-end:
+// This bench exercises both cancellation-heavy and same-sign accumulation.
+// Same-sign tests intentionally drive the accumulator past the old bit-24
+// carry-slot limit; the top level should now renormalize any bit-25 carry
+// every cycle and keep accumulating correctly.
 //
-//   1) fp32_accumulator silently drops the bit-25 carry when the running
-//      sum exceeds about 2× the per-cycle product magnitude. Any sustained
-//      same-sign accumulation past that point produces wrong results.
-//
-//   2) fp8_multiplier unconditionally prepends the implicit-1 bit to the
-//      mantissa, so an E4M3 "zero" operand (8'h00) is treated as
-//      1.0 × 2^-7 by the multiplier — it does NOT contribute zero to the
-//      accumulator. There is no E4M3 bit pattern that produces zero.
-//
-// To stay inside both limitations, every test uses operands with exp != 0
-// (always-normal) and arranges the product sequence to **alternate sign**.
-// Products alternate +1, -1, +1, -1, ... so the running sum oscillates
-// between {seed, seed+1} (or {seed-1, seed}) and never exceeds the safe
-// bound. After VECTOR_LEN=16 cycles (even count) the net contribution is 0
-// and the result equals the seed.
-//
-// Output format is E4M3 (fmt_sel=2'b01), packed in result[7:0]; result[31:8]
+// Output format is E4M3 (fmt_out=2'b01), packed in result[7:0]; result[31:8]
 // is zero per output_pack's contract.
 // =========================================================================
 
@@ -76,6 +63,7 @@ module fma_vector_unit_tb;
     localparam logic [7:0] E4M3_ZERO = 8'h00;  // +0    = 0_0000_000
     localparam logic [7:0] E4M3_PONE = 8'h38;  // +1.0  = 0_0111_000
     localparam logic [7:0] E4M3_NONE = 8'hB8;  // -1.0  = 1_0111_000
+    localparam logic [7:0] E4M3_PTWO = 8'h40;  // +2.0  = 0_1000_000
 
     // FP32 seed values
     localparam logic [31:0] FP32_ZERO = 32'h00000000;
@@ -88,6 +76,8 @@ module fma_vector_unit_tb;
     localparam logic [31:0] OUT_E4M3_PONE = 32'h00000038;  // E4M3 +1.0
     localparam logic [31:0] OUT_E4M3_NONE = 32'h000000B8;  // E4M3 -1.0
     localparam logic [31:0] OUT_E4M3_PTWO = 32'h00000040;  // E4M3 +2.0
+    localparam logic [31:0] OUT_E4M3_P16  = 32'h00000058;  // E4M3 +16.0
+    localparam logic [31:0] OUT_E4M3_P64  = 32'h00000068;  // E4M3 +64.0
 
     // -------------------------------------------------------------------------
     // Alternating-b helper: returns a vector where b[i]=+1 for even i, -1 for odd
@@ -119,6 +109,7 @@ module fma_vector_unit_tb;
         operand_b = b_vec;
         acc_seed  = seed;
         fmt_sel   = fmt;
+        fmt_out   = fmt;
         @(posedge clk);
         @(negedge clk);
         rst = 1'b0;
@@ -191,6 +182,19 @@ module fma_vector_unit_tb;
         run_test('{default: E4M3_NONE}, alt_b(),
                  FP32_ZERO, 2'b01, OUT_E4M3_ZERO,
                  "alt -1/+1 (neg first), seed=0 -> 0");
+
+        // =================================================================
+        // Same-sign accumulation: these now exercise per-cycle bit-25 carry
+        // renormalization instead of being avoided.
+        // =================================================================
+
+        run_test('{default: E4M3_PONE}, '{default: E4M3_PONE},
+                 FP32_ZERO, 2'b01, OUT_E4M3_P16,
+                 "same sign: 16 lanes of +1*+1 -> +16");
+
+        run_test('{default: E4M3_PTWO}, '{default: E4M3_PTWO},
+                 FP32_ZERO, 2'b01, OUT_E4M3_P64,
+                 "same sign: 16 lanes of +2*+2 -> +64");
 
         // =================================================================
         // Zero-operand tests (enabled by the |exp_x implicit-bit fix in
