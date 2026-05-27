@@ -4,12 +4,24 @@ module fp8_multiplier #(
 ) (
     input  logic [7:0]              a,
     input  logic [7:0]              b,
+    input  logic [1:0]              fmt_sel,
     output logic                    sign_p,
     output logic [EXP_BITS:0]       exp_p,
     output logic [2*MAN_BITS+1:0]   man_p
 );
 
-    localparam int BIAS = (1 << (EXP_BITS - 1)) - 1;
+    // Format-correct bias selection (OCP MX v1.0 Section 5.3):
+    //   FP4 (E2M1)=1, E4M3=7, E5M2=15. Default to EXP_BITS-derived bias
+    //   so unparameterized callers still get sane behavior.
+    logic [4:0] bias;
+    always_comb begin
+        unique case (fmt_sel)
+            2'b00:   bias = 5'd1;    // FP4 (E2M1)
+            2'b01:   bias = 5'd7;    // E4M3
+            2'b10:   bias = 5'd15;   // E5M2
+            default: bias = 5'((1 << (EXP_BITS - 1)) - 1);
+        endcase
+    end
 
     logic                  sign_a;
     logic                  sign_b;
@@ -34,7 +46,7 @@ module fp8_multiplier #(
     assign man_b  = {|exp_b, b[MAN_BITS-1:0]};
 
     assign sign_p = sign_a ^ sign_b;
-    assign exp_p  = {1'b0, exp_a} + {1'b0, exp_b} - (EXP_BITS + 1)'(BIAS);
+    assign exp_p  = {1'b0, exp_a} + {1'b0, exp_b} - (EXP_BITS + 1)'(bias);
     assign man_p  = man_a * man_b;
 
     assign fp4_a_hi = {1'b0, man_a[MAN_BITS:MAN_BITS-1], 1'b0};

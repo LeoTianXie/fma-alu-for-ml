@@ -45,7 +45,7 @@ module output_pack (
                 if (fp4_underflow) begin
                     result[3:0] = {sign_in, 3'b000};
                 end else if (fp4_overflow) begin
-                    result[3:0] = {sign_in, 2'b10, 1'b1};
+                    result[3:0] = {sign_in, 2'b11, 1'b1};   // FP4 max normal = +/-6.0 (OCP MX Table 5)
                 end else begin
                     result[3:0] = {sign_in, fp4_exp_s[1:0], fp4_man};
                 end
@@ -55,7 +55,7 @@ module output_pack (
                 if (e4m3_underflow) begin
                     result[7:0] = {sign_in, 7'b000_0000};
                 end else if (e4m3_overflow) begin
-                    result[7:0] = {sign_in, 4'b1110, 3'b111};
+                    result[7:0] = {sign_in, 4'b1111, 3'b110};   // E4M3 max normal = +/-448 (OCP FP8 spec)
                 end else begin
                     result[7:0] = {sign_in, e4m3_exp_s[3:0], e4m3_man};
                 end

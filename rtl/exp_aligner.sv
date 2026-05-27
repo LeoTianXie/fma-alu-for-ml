@@ -5,6 +5,7 @@ module exp_aligner #(
     input  logic [EXP_BITS:0]       exp_p,
     input  logic [2*MAN_BITS+1:0]   man_p,
     input  logic [7:0]              acc_exp,
+    input  logic [1:0]              fmt_sel,
     output logic [24:0]             man_aligned,
     output logic [7:0]              common_exp,
     output logic                    guard_bit,
@@ -12,9 +13,18 @@ module exp_aligner #(
     output logic                    sticky_bit
 );
 
-    localparam int FP8_BIAS  = (1 << (EXP_BITS - 1)) - 1;
-    localparam int BIAS_DIFF = 127 - FP8_BIAS;
-    localparam int LSHIFT    = 23 - 2*MAN_BITS;
+    localparam int LSHIFT = 23 - 2*MAN_BITS;
+
+    // Format-correct BIAS_DIFF = 127 - bias(fmt). FP4=126, E4M3=120, E5M2=112.
+    logic [7:0] bias_diff;
+    always_comb begin
+        unique case (fmt_sel)
+            2'b00:   bias_diff = 8'd126;  // FP4
+            2'b01:   bias_diff = 8'd120;  // E4M3
+            2'b10:   bias_diff = 8'd112;  // E5M2
+            default: bias_diff = 8'(127 - ((1 << (EXP_BITS - 1)) - 1));
+        endcase
+    end
 
     logic                  ovf;
     logic [EXP_BITS+1:0]   exp_p_norm;
@@ -30,7 +40,7 @@ module exp_aligner #(
 
     assign man_fp32 = {1'b0, man_p_norm[2*MAN_BITS:0], {LSHIFT{1'b0}}};
 
-    assign product_fp32_exp = 8'(exp_p_norm) + 8'(BIAS_DIFF);
+    assign product_fp32_exp = 8'(exp_p_norm) + bias_diff;
 
     assign acc_larger   = (acc_exp > product_fp32_exp);
     assign shift_amount = acc_larger ? (acc_exp - product_fp32_exp) : 8'd0;

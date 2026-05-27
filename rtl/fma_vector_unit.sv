@@ -100,15 +100,16 @@ module fma_vector_unit #(
                 .EXP_BITS (EXP_BITS),
                 .MAN_BITS (MAN_BITS)
             ) u_mul (
-                .sign_a (a_sign[i]),
-                .sign_b (b_sign[i]),
-                .exp_a  (a_exp[i]),
-                .exp_b  (b_exp[i]),
-                .man_a  (a_man[i]),
-                .man_b  (b_man[i]),
-                .sign_p (mul_sign[i]),
-                .exp_p  (mul_exp[i]),
-                .man_p  (mul_man[i])
+                .sign_a  (a_sign[i]),
+                .sign_b  (b_sign[i]),
+                .exp_a   (a_exp[i]),
+                .exp_b   (b_exp[i]),
+                .man_a   (a_man[i]),
+                .man_b   (b_man[i]),
+                .fmt_sel (fmt_sel),
+                .sign_p  (mul_sign[i]),
+                .exp_p   (mul_exp[i]),
+                .man_p   (mul_man[i])
             );
 
             exp_aligner #(
@@ -118,6 +119,7 @@ module fma_vector_unit #(
                 .exp_p       (mul_exp[i]),
                 .man_p       (mul_man[i]),
                 .acc_exp     (acc_exp_reg),
+                .fmt_sel     (fmt_sel),
                 .man_aligned (lane_man_aligned[i]),
                 .common_exp  (lane_common_exp[i]),
                 .guard_bit   (lane_guard[i]),

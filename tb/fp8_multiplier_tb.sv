@@ -13,6 +13,7 @@ module fp8_multiplier_tb;
     fp8_multiplier #(.EXP_BITS(4), .MAN_BITS(3)) dut_e4m3 (
         .a      (a4),
         .b      (b4),
+        .fmt_sel(2'b01),
         .sign_p (sign4),
         .exp_p  (exp4),
         .man_p  (man4)
@@ -29,6 +30,7 @@ module fp8_multiplier_tb;
     fp8_multiplier #(.EXP_BITS(5), .MAN_BITS(2)) dut_e5m2 (
         .a      (a5),
         .b      (b5),
+        .fmt_sel(2'b10),
         .sign_p (sign5),
         .exp_p  (exp5),
         .man_p  (man5)
