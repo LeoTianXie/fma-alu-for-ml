@@ -2,7 +2,7 @@ module input_decode #(
     parameter int EXP_BITS = 4,
     parameter int MAN_BITS = 3
 ) (
-    input  logic [EXP_BITS+MAN_BITS:0] raw_bits,
+    input  logic [7:0]                 raw_bits,
     input  logic [1:0]                 fmt_sel,
     output logic                       sign,
     output logic [EXP_BITS-1:0]        exp,
@@ -24,7 +24,8 @@ module input_decode #(
         unique case (fmt_sel)
             2'b00: begin
                 sign          = raw_bits[3];
-                exp           = raw_bits[2:1];
+                exp           = '0;
+                exp[1:0]      = raw_bits[2:1];
                 mantissa      = '0;
                 mantissa[MAN_BITS-1] = raw_bits[0];
                 mantissa[MAN_BITS] = (raw_bits[2:1] != 2'b00);
@@ -35,7 +36,8 @@ module input_decode #(
 
             2'b01: begin
                 sign          = raw_bits[7];
-                exp           = raw_bits[6:3];
+                exp           = '0;
+                exp[3:0]      = raw_bits[6:3];
                 mantissa      = '0;
                 mantissa[MAN_BITS] = (raw_bits[6:3] != 4'h0);
                 mantissa[2:0] = raw_bits[2:0];
@@ -49,7 +51,7 @@ module input_decode #(
                 exp           = raw_bits[6:2];
                 mantissa      = '0;
                 mantissa[MAN_BITS] = (raw_bits[6:2] != 5'h00);
-                mantissa[1:0] = raw_bits[1:0];
+                mantissa[MAN_BITS-1 -: 2] = raw_bits[1:0];
                 is_zero       = (raw_bits[6:2] == 5'h00) & (raw_bits[1:0] == 2'b00);
                 is_inf        = (raw_bits[6:2] == 5'h1F) & (raw_bits[1:0] == 2'b00);
                 is_nan        = (raw_bits[6:2] == 5'h1F) & (raw_bits[1:0] != 2'b00);

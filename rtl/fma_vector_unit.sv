@@ -1,6 +1,6 @@
 module fma_vector_unit #(
     parameter int VECTOR_LEN = 16,
-    parameter int EXP_BITS   = 4,
+    parameter int EXP_BITS   = 5,
     parameter int MAN_BITS   = 3
 ) (
     input  logic                       clk,

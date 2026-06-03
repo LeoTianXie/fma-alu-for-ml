@@ -40,7 +40,7 @@
 module fma_vector_unit_mx_tb;
 
     localparam int VECTOR_LEN = 16;
-    localparam int EXP_BITS   = 4;
+    localparam int EXP_BITS   = 5;
     localparam int MAN_BITS   = 3;
 
     // fmt_sel encoding (matches input_decode.sv)
@@ -441,6 +441,15 @@ module fma_vector_unit_mx_tb;
         run_dot(FMT_E5M2, a, b, 32'h0000_0000);
         ref_val = mx_ref_dot(FMT_E5M2, a, b, 32'h0000_0000);
         check_result("E5M2: 16*(1.0*1.0)", ref_val, 4);
+
+        for (i = 0; i < VECTOR_LEN; i++) begin
+            // E5M2: 2.0 = S=0, E=10000, M=00. This catches exponent MSB truncation.
+            a[i] = 8'h40;
+            b[i] = 8'h40;
+        end
+        run_dot(FMT_E5M2, a, b, 32'h0000_0000);
+        ref_val = mx_ref_dot(FMT_E5M2, a, b, 32'h0000_0000);
+        check_result("E5M2: 16*(2.0*2.0)", ref_val, 4);
 
         // -----------------------------------------------------------------
         // T8: FP4 (E2M1) - shared pipeline with runtime FP4 bias correction.

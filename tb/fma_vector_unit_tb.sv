@@ -17,7 +17,7 @@
 module fma_vector_unit_tb;
 
     localparam int VECTOR_LEN = 16;
-    localparam int EXP_BITS   = 4;
+    localparam int EXP_BITS   = 5;
     localparam int MAN_BITS   = 3;
     localparam int CLK_PERIOD = 10;
 
