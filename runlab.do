@@ -29,12 +29,12 @@ vlog "./tb/fma_vector_unit_mx_tb.sv"
 # Call vsim to invoke simulator
 #     Make sure the last item on the line is the name of the
 #     testbench module you want to execute.
-vsim -voptargs="+acc" -t 1ps -lib work exp_aligner_tb
+vsim -voptargs="+acc" -t 1ps -lib work fma_vector_unit_mx_tb
 
 # Source the wave do file
 #     This should be the file that sets up the signal window for
 #     the module you are testing.
-do exp_aligner_tb_wave.do
+do fma_vector_unit_mx_tbwave.do
 
 # Set the window types
 view wave
